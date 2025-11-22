@@ -11,3 +11,32 @@ nav a.active {
     font-weight: 700;
     text-decoration: none;
 }
+
+/* Remember checkbox: change checked color to match brand and remove shadows */
+.remember-forgot input[type="checkbox"] {
+    /* Primary: modern browsers respect accent-color */
+    accent-color: #2b6758;
+    /* Remove any default shadow/outline when rendered by CSS-aware browsers */
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    outline: none;
+}
+
+/* Remove focus outline/shadow while keeping a visible border color for accessibility */
+.remember-forgot input[type="checkbox"]:focus,
+.remember-forgot input[type="checkbox"]:focus-visible {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    outline: none;
+    border-color: #2b6758;
+}
+
+/* Fallback visuals for browsers that don't support accent-color.
+   These rules try to reinforce the checked appearance; native
+   checkboxes may still be OS-rendered and not fully styleable. */
+.remember-forgot input[type="checkbox"]:checked {
+    background-color: #2b6758;
+    border-color: #2b6758;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
