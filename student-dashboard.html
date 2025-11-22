@@ -51,6 +51,14 @@
         border-radius: 50%; 
         object-fit: cover; 
         margin-right: 10px; 
+        animation: pulseGlow 2s infinite;
+        box-shadow: 0 0 8px #00ffb3;
+      }
+
+      @keyframes pulseGlow {
+        0% { box-shadow: 0 0 6px #00ffb3; }
+        50% { box-shadow: 0 0 18px #00ffb3; }
+        100% { box-shadow: 0 0 6px #00ffb3; }
       }
 
       header h1 { 
