@@ -5,42 +5,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Event Coordinator - OrgBoard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <link rel="stylesheet" href="assets/css/main.css">
-      <style>
-        /* ==== GLOBAL STYLE ==== */
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { background: linear-gradient(180deg, #ecfdf5 0%, #f6f9f8 100%); color: #333; min-height: 100vh; display: flex; flex-direction: column; }
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+      * { 
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
+      }
 
-          /* Remove rigid min-width (caused horizontal overflow in some cases)
-             Add safer rules below to prevent overflow while keeping layout fluid. */
+      body { 
+        background: linear-gradient(180deg, #ecfdf5 0%, #f6f9f8 100%); 
+        color: #333; 
+        min-height: 100vh; 
+        display: flex; 
+        flex-direction: column; 
+      }
 
-      /* ==== HEADER ==== */
-      header { background-color: #2b6758; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); position: sticky; top: 0; z-index: 10; }
-      header .logo { display: flex; align-items: center; }
-      .orgboard-logo { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 10px; }
-      header h1 { font-size: 1.35rem; font-weight: 600; }
-      header p { font-size: 0.8rem; color: white; }
-      header .icons { display: flex; align-items: center; gap: 15px; font-size: 1.4rem; }
-      .profile-icon { width: 38px; height: 38px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center; color: #2b6758; font-weight: 700; font-size: 1rem; cursor: pointer; }
+      header { 
+        background-color: #2b6758; 
+        color: white; 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        padding: 0.8rem 1.5rem; 
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+        position: sticky; 
+        top: 0; 
+        z-index: 10; 
+      }
 
-      /* ==== NAV ==== */
-      nav { background-color: #265c4f; color: white; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; padding: 0.6rem 1rem; }
-      nav a { margin: 5px 12px; text-decoration: none; color: white; font-weight: 500; transition: color 0.3s; }
-      nav a:hover { color: #00ffb3; }
-      nav a.active { color: #00ffb3; font-weight: 700; text-decoration: none; }
-      nav span { margin-left: auto; font-weight: 600; font-size: 0.9rem; }
+      header .logo { 
+        display: flex; 
+        align-items: center; 
+      }
+
+      .orgboard-logo { 
+        width: 50px; 
+        height: 50px; 
+        border-radius: 50%; 
+        object-fit: cover; 
+        margin-right: 10px; 
+      }
+
+      header h1 { 
+        font-size: 1.35rem; 
+        font-weight: 600; 
+      }
+
+      header p { 
+        font-size: 0.8rem; 
+        color: white; 
+      }
+
+      header .icons { 
+        display: flex; 
+        align-items: center; 
+        gap: 15px; 
+        font-size: 1.4rem; 
+      }
+
+      .profile-icon { 
+        width: 38px; 
+        height: 38px; 
+        border-radius: 50%; 
+        background-color: white; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        color: #2b6758; 
+        font-weight: 700; 
+        font-size: 1rem; 
+        cursor: pointer; 
+      }
+
+      nav { 
+        background-color: #265c4f; 
+        color: white; 
+        display: flex; 
+        flex-wrap: wrap; 
+        justify-content: center; 
+        align-items: center; 
+        padding: 0.6rem 1rem;      
+      }
+
+      nav a { 
+        margin: 5px 12px; 
+        text-decoration: none; 
+        color: white; 
+        font-weight: 500; 
+        transition: color 0.3s; 
+      }
+
+      nav a:hover { 
+        color: #00ffb3; 
+      }
+
+      nav a.active { 
+        color: #00ffb3; 
+        font-weight: 700; 
+        text-decoration: none; 
+      }
+
+      nav span { 
+        margin-left: auto; 
+        font-weight: 600; 
+        font-size: 0.9rem; 
+      }
 
       .welcome-back{
         margin-right: 15px;
       }
 
-      /* ==== DASHBOARD ==== */
-      /* Use responsive grid that allows items to shrink without overflowing.
-        Ensure each card can shrink by setting `min-width: 0` so long content
-        won't force overflow when zooming. */
-      .dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; padding: 2rem; align-items: start; }
-      .card { border-radius: 15px; text-align: center; padding: 1.5rem; font-weight: 600; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12); transition: transform 0.25s ease, box-shadow 0.25s ease; min-width: 0; box-sizing: border-box; }
-      .card:hover { transform: translateY(-5px);}
+      .dashboard-cards { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+        gap: 1.2rem; 
+        padding: 2rem; 
+        align-items: start; 
+      }
+
+      .card { 
+        border-radius: 15px; 
+        text-align: center; 
+        padding: 1.5rem; 
+        font-weight: 600; 
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12); 
+        transition: transform 0.25s ease, box-shadow 0.25s ease; 
+        min-width: 0; 
+        box-sizing: border-box; 
+      }
+
+      .card:hover { 
+        transform: translateY(-5px);
+      }
+
       .green-card, .blue-card, .yellow-card, .red-card { 
         background-color: white; 
         color: black;
@@ -50,17 +148,41 @@
         color: #265c4f;
       }
 
-      .card p:first-child { font-size: 1.8rem; font-weight: bold; }
-      .card p:nth-child(2) { font-size: 0.95rem; }
+      .card p:first-child { 
+        font-size: 1.8rem; font-weight: bold; 
+      }
 
+      .card p:nth-child(2) { 
+        font-size: 0.95rem; 
+      }
 
-      /* ==== MAIN GRID ==== */
-      .main-grid { display: grid; grid-template-columns: 1fr; gap: 1.2rem; padding: 0 2rem 2rem; }
-      @media (min-width: 992px) { .main-grid { grid-template-columns: 1fr 1fr; } }
+      .main-grid { 
+        display: grid; 
+        grid-template-columns: 1fr; 
+        gap: 1.2rem; 
+        padding: 0 2rem 2rem; 
+      }
 
-      .box { background: white; border-radius: 15px; padding: 1.5rem; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); position: relative; }
-      .box h2 { font-weight: 600; margin-bottom: 1.5rem; font-size: 1rem; color: #2b6758; }
-      
+      @media (min-width: 992px) { 
+        .main-grid { 
+          grid-template-columns: 1fr 1fr; 
+        } 
+      }
+
+      .box { 
+        background: white; 
+        border-radius: 15px; 
+        padding: 1.5rem; 
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); 
+        position: relative; 
+      }
+
+      .box h2 { 
+        font-weight: 600; 
+        margin-bottom: 1.5rem; 
+        font-size: 1rem; 
+        color: #2b6758; 
+      }
       
       .dashboard-view-btn {
         position: absolute;
@@ -122,19 +244,26 @@
         transform: translateY(0);
       }
 
-      /* Give buttons inside the event-details a small left gap instead of
-         a large fixed margin. This keeps the layout flexible and prevents
-         overflow when zooming. */
-      .event-details button { margin-left: 8px; }
+      .event-details button { 
+        margin-left: 8px; 
+      }
 
-      /* Prevent horizontal overflow: ensure images scale, and allow flex/grid
-        children to shrink when needed. Also hide any accidental horizontal
-        overflow while preserving vertical scroll for content. */
-      img { max-width: 100%; height: auto; display: block; }
-      .dashboard-cards > *, .main-grid > *, .box, header, nav, .modal, .es-modal-wide, .details-content { min-width: 0; box-sizing: border-box; }
-      html, body { max-width: 100%; overflow-x: hidden; }
+      img { 
+        max-width: 100%; 
+        height: auto; 
+        display: block; 
+      }
 
-      /* ==== EVENT ITEMS ==== */
+      .dashboard-cards > *, .main-grid > *, .box, header, nav, .modal, .es-modal-wide, .details-content { 
+        min-width: 0; 
+        box-sizing: border-box; 
+      }
+
+      html, body { 
+        max-width: 100%; 
+        overflow-x: hidden; 
+      }
+
       a.event-item, a.notif-item {
         display: block;
         text-decoration: none;
@@ -152,10 +281,17 @@
         transform: scale(1.01);
       }
 
-      .event-card h4 { font-weight: 600; margin-bottom: 0.3rem; }
-      .event-card p { font-size: 0.9rem; margin-bottom: 0.3rem; color: #333; }
+      .event-card h4 { 
+        font-weight: 600; 
+        margin-bottom: 0.3rem; 
+      }
 
-      /* Green plain text for status */
+      .event-card p { 
+        font-size: 0.9rem; 
+        margin-bottom: 0.3rem; 
+        color: #333; 
+      }
+
       .event-details {
         font-style: normal;
         font-weight: 600;
@@ -169,7 +305,6 @@
         align-items: center;
       }
 
-      /* Layout helper for cost + submitter stacked vertically */
       .cost-and-submitter {
         display: flex;
         flex-direction: column;
@@ -193,7 +328,6 @@
         font-size: 0.85rem;
       }
 
-      /* ==== EVENT CARD (MODAL) ==== */
       .event-card {
         position: relative;
         border: 1px solid #e5e7eb;
@@ -235,7 +369,6 @@
         font-size: 0.9rem;
       }
 
-
       .event-card .view-details {
         position: absolute;
         top: 1rem;
@@ -260,20 +393,49 @@
         transform: translateY(0);
       }
 
+      table { 
+        width: 100%; 
+        border-radius: 10px; 
+        overflow: hidden; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+      }
 
-      /* ==== TABLE ==== */
-      table { width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-      thead { background-color: #2b6758; color: white; }
-      th, td { padding: 0.8rem; text-align: center; }
+      thead { 
+        background-color: #2b6758; 
+        color: white; 
+      }
 
-      tbody tr:hover { background-color: #ecfdf5; }
-      .status-pending { color:#854d0e; font-weight: 600; }
-      .status-approved { color:#1e3a8a; font-weight: 600; }
-      .status-rejected {color:#FF0000; font-weight: 600;}
+      th, td { 
+        padding: 0.8rem; 
+        text-align: center; 
+      }
 
-      footer { text-align: center; font-size: 0.8rem; color: #666; margin: 1.5rem 0; }
+      tbody tr:hover { 
+        background-color: #ecfdf5; 
+      }
 
-      /* ==== MODAL ==== */
+      .status-pending { 
+        color:#854d0e; 
+        font-weight: 600; 
+      }
+
+      .status-approved { 
+        color:#1e3a8a; 
+        font-weight: 600; 
+      }
+
+      .status-rejected {
+        color:#FF0000; 
+        font-weight: 600;
+      }
+
+      footer { 
+        text-align: center; 
+        font-size: 0.8rem; 
+        color: #666; 
+        margin: 1.5rem 0; 
+      }
+
       .modal-overlay {
         display: none;
         position: fixed;
@@ -342,19 +504,39 @@
       }
 
       @keyframes refreshMove {
-        0% { transform: translateY(0); opacity: 1; }
-        25% { transform: translateY(-10px); opacity: 0.8; }
-        50% { transform: translateY(10px); opacity: 0.9; }
-        100% { transform: translateY(0); opacity: 1; }
+        0% { 
+          transform: translateY(0); 
+          opacity: 1; 
+        }
+
+        25% { 
+          transform: translateY(-10px); 
+          opacity: 0.8; 
+        }
+
+        50% { 
+          transform: translateY(10px); 
+          opacity: 0.9; 
+        }
+
+        100% { 
+          transform: translateY(0); 
+          opacity: 1; 
+        }
       }
 
       .event-card.refresh-anim {
         animation: refreshMove 0.6s ease;
       }
 
+      .modal-content::-webkit-scrollbar { 
+        width: 6px; 
+      }
 
-      .modal-content::-webkit-scrollbar { width: 6px; }
-      .modal-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+      .modal-content::-webkit-scrollbar-thumb { 
+        background: #ccc; 
+        border-radius: 3px; 
+      }
 
       .modal-content h3 {
         color: #2b6758;
@@ -373,20 +555,34 @@
         color: white;
         transition: color 0.3s;
       }
-      .close-modal:hover { color: #00ffb3; }
+      .close-modal:hover { 
+        color: #00ffb3; 
+      }
 
       @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.95); }
-        to { opacity: 1; transform: scale(1); }
+        from { 
+          opacity: 0; 
+          transform: scale(0.95); 
+        }
+
+        to { 
+          opacity: 1; 
+          transform: scale(1); 
+        }
       }
 
       @media (max-width: 768px) {
-        .modal-content { grid-template-columns: 1fr; max-height: 75vh; }
-        .modal-header input { width: 85%; }
+        .modal-content { 
+          grid-template-columns: 1fr; 
+          max-height: 75vh; 
+        }
+
+        .modal-header input { 
+          width: 85%; 
+        }
       }
 
-      /* ==== FLOATING EVENT DETAILS CARD ==== */
-    .details-float {
+      .details-float {
         display: none;
         position: fixed;
         top: 0;
@@ -404,11 +600,11 @@
       .details-content {
         background: #ffffff;
         border-radius: 15px;
-      width: 90%;
-      max-width: 480px;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      animation: scaleUp 0.3s ease;
+        width: 90%;
+        max-width: 480px;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        animation: scaleUp 0.3s ease;
       }
 
       .details-header {
@@ -429,33 +625,30 @@
         padding: 1.5rem 2rem;
       }
 
-    .details-body p {
-      font-size: 0.95rem;
-      color: #333;
-      margin: 0.6rem 0;
+      .details-body p {
+        font-size: 0.95rem;
+        color: #333;
+        margin: 0.6rem 0;
       }
 
       .details-body strong {
         color: #265c4f;
       }
 
-      /* === FINANCIAL REPORT SECTION === */
       #financialReportSection {
         font-family: "Poppins", sans-serif;
         background-color: #f8fdfb;
         padding: 2rem;
       }
 
-      /* 🔹 Filter Container */
       .filter-container {
         display: flex;
         flex-direction: column;
         gap: 0.8rem;
         width: 100%;
-      margin-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
       }
 
-      /* 🔍 First Row (Search) */
       .search-row input {
         width: 100%;
         height: 42px;
@@ -474,34 +667,31 @@
         box-shadow: 0 0 4px rgba(43, 103, 88, 0.4);
       }
 
-      /* 🎛 Second Row (Dropdowns) */
       .dropdown-row {
         display: flex;
         align-items: center;
         gap: 1rem;
         width: 100%;
       }
-
-      /* ==== ORGBOARD CONSISTENT DROPDOWN ==== */
+   
       .dropdown-row select {
         flex: 1;
         height: 42px;
         border: 1px solid #d0ddd8;
-        border-radius: 10px; /* ✅ matches OrgBoard cards */
-        padding: 0 3rem 0 1rem; /* ✅ consistent spacing */
+        border-radius: 10px; 
+        padding: 0 3rem 0 1rem;
         font-size: 0.95rem;
         font-weight: 500;
         color: black;
         background-color: #ffffff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* ✅ same depth as cards */
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         transition: all 0.25s ease;
         appearance: none;
         cursor: pointer;
 
-        /* ✅ Consistent green dropdown arrow */
         background-image: url("data:image/svg+xml,%3Csvg fill='%232b6758' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
-        background-position: right 1.5rem center; /* ✅ properly spaced arrow */
+        background-position: right 1.5rem center; 
         background-size: 18px;
       }
 
@@ -512,11 +702,9 @@
       }
 
       tbody tr td {
-        border: 1px solid #ccc;/* default border */
+        border: 1px solid #ccc;
       }
 
-
-      /* 📱 Responsive */
       @media (max-width: 992px) {
         .dropdown-row {
           flex-direction: column;
@@ -524,9 +712,8 @@
         }
       }
 
-      /* OrgBoard-style button */
       .orgboard-btn {
-        background-color: #2b6758; /* OrgBoard green */
+        background-color: #2b6758; 
         color: #fff;
         border: none;
         border-radius: 6px;
@@ -539,11 +726,10 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        height: 34px; /* consistent button height for centering */
+        height: 34px; 
         min-width: 70px;
       }
 
-      /* Hover & Active states */
       .orgboard-btn:hover {
         background-color:#00ffb3;
         transform: translateY(-2px);
@@ -555,8 +741,6 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
       }
 
-
-      /* === OrgBoard-style Search Bar === */
       .search-wrapper {
         display: flex;
         align-items: center;
@@ -580,9 +764,8 @@
         outline: none;
       }
 
-      /* === Search Button === */
       .search-btn {
-        background-color: #2b6758; /* OrgBoard green */
+        background-color: #2b6758;
         border: none;
         padding: 12px 14px;
         border-radius: 7px;
@@ -602,7 +785,6 @@
         transform: translateY(0);
       }
 
-      /* === Search Icon inside button === */
       .search-icon {
         width: 18px;
         height: 18px;
@@ -610,10 +792,7 @@
         stroke: white;
       }
 
-      /* ====== PROGRESS TRACKING TABLE ====== */
       .progress-wrapper {
-        /* Match horizontal spacing used by main content/financial section
-           so table edges align with header and other sections. */
         margin: 40px 2rem;
         background-color: #ffffff;
         border-radius: 12px;
@@ -624,7 +803,6 @@
         max-width: calc(100% - 4rem);
       }
 
- 
       .finance-table td {
         padding: 14px 18px;
         text-align: center;
@@ -659,7 +837,6 @@
         transform: translateY(0);
       }
 
-      /* ====== PROGRESS BAR ====== */
       .progress-container {
         display: flex;
         align-items: center;
@@ -680,16 +857,15 @@
         color: #333;
       }
 
-      /* ====== STATUS BUTTON ====== */
       .center-btn {
         display: flex;
-        flex-direction: column; /* ✅ ilalagay silang isa sa ibabaw ng isa */
+        flex-direction: column; 
         align-items: center;
-        gap: 10px; /* ✅ vertical space sa pagitan ng View at Report buttons */
+        gap: 10px; 
       }
 
       .report-btn {
-        background-color: #2b6758; /* OrgBoard green */
+        background-color: #2b6758; 
         color: #fff;
         border: none;
         border-radius: 6px;
@@ -702,7 +878,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        height: 34px; /* consistent button height for centering */
+        height: 34px;
         min-width: 70px;
       }
 
@@ -723,20 +899,16 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         padding: 20px;
         font-family: 'Poppins', sans-serif;
-        overflow-x: auto; /* allow horizontal scroll on small screens */
-        -webkit-overflow-scrolling: touch;
-        /* keep table content contained and avoid causing page-wide overflow */
+        overflow-x: auto;
       }
 
-      /* Ensure finance tables can be wider than the viewport but stay contained
-         inside the scrollable card on smaller screens. */
       .finance-table {
         min-width: 720px;
         border-collapse: collapse;
       }
 
       .table-btn {
-        background-color: #2b6758; /* OrgBoard green */
+        background-color: #2b6758;
         color: #fff;
         border: none;
         border-radius: 6px;
@@ -749,7 +921,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        height: 34px; /* consistent button height for centering */
+        height: 34px;
         min-width: 70px;
       }
 
@@ -762,7 +934,6 @@
         transform: translateY(0);
       }
 
-      /* ==== PROFILE DROPDOWN MENU ==== */
       .profile-dropdown {
         position: absolute;
         top: 50px;
@@ -784,12 +955,10 @@
         display: flex;
       }
 
-      /* ===== NOTIFICATION BUTTON & DROPDOWN ===== */
-      /* Make notification bell match profile button size & style */
       .notif-btn {
-        background-color: #1f5d50; /* same as profile-btn */
+        background-color: #1f5d50; 
         color: white;
-        border: 2px solid #00ffb3; /* accent border like profile */
+        border: 2px solid #00ffb3; 
         width: 40px;
         height: 40px;
         border-radius: 50%;
@@ -802,10 +971,21 @@
         transition: background 0.25s ease, transform 0.12s ease;
       }
 
-      .notif-btn:hover { background-color: #00ffb3; transform: translateY(-2px); }
-      .notif-btn:active { transform: translateY(0); }
+      .notif-btn:hover { 
+        background-color: #00ffb3; 
+        transform: translateY(-2px); 
+      }
 
-      .notif-btn svg { width: 18px; height: 18px; color: white; stroke: currentColor; }
+      .notif-btn:active { 
+        transform: translateY(0); 
+      }
+
+      .notif-btn svg { 
+        width: 18px; 
+        height: 18px; 
+        color: white; 
+        stroke: currentColor; 
+      }
 
       .notif-badge {
         background: #ff3b3b;
@@ -821,12 +1001,11 @@
         transform: translate(6px, -6px);
       }
 
-      /* Make notif dropdown match the system/profile dropdown layout */
       .notif-dropdown {
         position: absolute;
         right: 0;
-        top: 48px; /* align under header buttons */
-        width: 280px; /* similar to profile dropdown */
+        top: 48px; 
+        width: 280px; 
         background: #ffffff;
         border-radius: 15px;
         box-shadow: 0 8px 30px rgba(0,0,0,0.15);
@@ -888,7 +1067,6 @@
         margin-top: 2px;
       }
 
-      /* unread item highlight (no left accent) */
       .notif-entry.unread {
         background: #e8fff5;
       }
@@ -2897,7 +3075,17 @@
         notes,
       });
 
-      es_closeModal();
+      // Show site-wide success modal (re-using existing successCard)
+      const successMsgEl = document.getElementById('successMessage');
+      const successModal = document.getElementById('successCard');
+      if (successMsgEl) successMsgEl.textContent = 'Event status has been updated successfully!';
+      if (successModal) successModal.classList.add('active');
+
+      // Close the success modal after 3s and then close the Event Status modal
+      setTimeout(() => {
+        if (successModal) successModal.classList.remove('active');
+        es_closeModal();
+      }, 3000);
     }
     </script>
     <!-- SUCCESS (copied login-page design) -->
