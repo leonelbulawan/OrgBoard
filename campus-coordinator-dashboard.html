@@ -3005,6 +3005,53 @@
       </div>
     </div>
     <script>
+      // Approve / Reject button handlers for event items
+      (function() {
+        document.addEventListener('click', function(e) {
+          const approveBtn = e.target.closest && e.target.closest('.approve-btn');
+          const rejectBtn = e.target.closest && e.target.closest('.reject-btn');
+          const btn = approveBtn || rejectBtn;
+          if (!btn) return;
+
+          // prevent anchor navigation
+          e.preventDefault();
+          e.stopPropagation();
+
+          const isApprove = !!approveBtn;
+          const eventItem = btn.closest('.event-item');
+          if (!eventItem) return;
+
+          const titleEl = eventItem.querySelector('p strong') || eventItem.querySelector('h4');
+          const title = titleEl ? titleEl.textContent.trim() : 'Event';
+
+          const actions = eventItem.querySelector('.event-actions');
+          if (actions) {
+            // replace action buttons with a readonly status element
+            actions.innerHTML = '';
+            const statusEl = document.createElement('button');
+            statusEl.className = 'status';
+            statusEl.disabled = true;
+            statusEl.textContent = isApprove ? 'Approved' : 'Rejected';
+            if (isApprove) statusEl.classList.add('status-approved');
+            else statusEl.classList.add('status-rejected');
+            actions.appendChild(statusEl);
+          }
+
+          // mark data-status for potential future use
+          eventItem.dataset.status = isApprove ? 'approved' : 'rejected';
+
+          // show success modal with contextual message
+          const successMsgEl = document.getElementById('successMessage');
+          const successModal = document.getElementById('successCard');
+          if (successMsgEl) successMsgEl.textContent = `${title} has been ${isApprove ? 'approved' : 'rejected'}.`;
+          if (successModal) {
+            successModal.classList.add('active');
+            setTimeout(() => successModal.classList.remove('active'), 2000);
+          }
+        });
+      })();
+    </script>
+    <script>
       (function markActiveNav(){
         try{
           const filename = window.location.pathname.split('/').pop();
