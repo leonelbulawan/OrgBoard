@@ -1135,8 +1135,6 @@
         width: 20px;
       }
 
-
-      /* ==== PROFILE DROPDOWN ==== */
       .profile-container {
         position: relative;
         display: inline-block;
@@ -1146,7 +1144,7 @@
         background-color: #1f5d50;
         color: white;
         font-weight: 600;
-        border: 2px solid #00ffb3; /* accent border */
+        border: 2px solid #00ffb3;
         border-radius: 50%;
         width: 40px;
         height: 40px;
@@ -1158,12 +1156,13 @@
         box-shadow: 0 2px 6px rgba(0,0,0,0.12);
       }
 
-      /* hover should mirror orgboard button behaviour */
       .profile-btn:hover {
         background-color: #00ffb3;
         transform: translateY(-2px);
       }
-      .profile-btn:active { transform: translateY(0); }
+      .profile-btn:active { 
+        transform: translateY(0); 
+      }
 
       .profile-btn .profile-img {
         width: 100%;
@@ -1224,7 +1223,6 @@
         margin-top: 2px;
       }
 
-      /* Menu items */
       .profile-menu {
         list-style: none;
         margin: 0;
@@ -1246,8 +1244,6 @@
         background-color: #f0f8f5;
       }
 
-
-      /* ==== FINANCIAL REPORT ACTION BUTTONS ==== */
       .financial-report-actions {
         display: flex;
         justify-content: center;
@@ -1271,7 +1267,6 @@
 
       }
 
-      /* Green button */
       .check-budget-btn {
         background-color: #2b6758;
       }
@@ -1285,7 +1280,6 @@
         transform: translateY(0);
       }
 
-      /* Red button */
       .send-reminders-btn {
         background-color: #245847;
       }
@@ -1299,7 +1293,6 @@
         transform: translateY(0);
       }
 
-      /* === OPEN MODAL BUTTON === */
       .check-budget-btn {
         padding: 8px 16px;
         background-color: #1f5f4e;
@@ -1310,7 +1303,6 @@
         font-weight: 600;
       }
 
-      /* === OVERLAY === */
       .bc-overlay {
         display: none;
         position: fixed;
@@ -1322,7 +1314,6 @@
         background: rgba(0,0,0,0.45);
       }
 
-      /* === MODAL BOX === */
       .bc-modal {
         width: 90%;
         max-width: 900px;
@@ -1337,9 +1328,6 @@
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
       }
 
-
-
-      /* === GREEN HEADER === */
       .bc-modal-header {
         background-color: #1f5f4e;
         color: white;
@@ -1355,7 +1343,6 @@
         font-weight: bold;
       }
 
-      /* === CLOSE BUTTON === (same style as Events modal) */
       .bc-close-btn {
         background: none;
         border: none;
@@ -1370,12 +1357,10 @@
         color: #00ffb3; 
       }
 
-      /* === CONTENT AREA === */
       .bc-modal-content {
         padding: 25px;
       }
 
-      /* === STATUS BOXES === */
       .bc-status-row {
         display: flex;
         gap: 20px;
@@ -1414,7 +1399,6 @@
         background: white; 
       }
 
-      /* === BUDGET REQUEST CARDS === */
       .bc-card {
         background: white;
         padding: 18px;
@@ -1434,8 +1418,6 @@
         margin: 0 0 4px;
       }
 
-
-      /* === VIEW DETAILS BUTTON (same as Events modal) === */
      .bc-view-btn {
         position: absolute;
         top: 18px;
@@ -1459,8 +1441,6 @@
         transform: translateY(0);
       }
 
-
-      /* ===== MODAL OVERLAY ===== */
       .bd-modal-overlay {
         display: none;
         position: fixed;
@@ -1476,8 +1456,6 @@
         animation: fadeIn 0.25s ease;
       }
 
-
-      /* ===== MODAL BOX ===== */
       .bd-modal-box {
         background: #ffffff;
         width: 90%;
@@ -1488,7 +1466,6 @@
         animation: scaleUp 0.3s ease;
       }
 
-      /* ===== HEADER (green same as image) ===== */
       .bd-modal-header {
         background: #1F5E4C;
         color: white;
@@ -1531,7 +1508,6 @@
         color: #00ffb3; 
       }
 
-      /* Overlay */
       .sr-overlay {
         display: none;
         position: fixed;
@@ -1543,7 +1519,6 @@
         background: rgba(0,0,0,0.45);
       }
 
-      /* Modal size matched to Budget Check */
       .sr-modal-box {
         width: 90%;
         max-width: 900px;
@@ -1558,7 +1533,6 @@
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
       }
 
-      /* Header */
       .sr-header {
         background-color: #1f5f4e;
         color: white;
@@ -1596,7 +1570,6 @@
         margin-top: 14px;
       }
 
-      /* Inputs */
       #sr-recipient, #sr-subject, #sr-message {
         width: 100%;
         padding: 10px 12px;
@@ -1619,7 +1592,6 @@
         resize: none;
       }
 
-      /* LOGIN-style error messages */
       .sr-error {
         color: #e74c3c;
         font-size: 13px;
@@ -1629,14 +1601,12 @@
         font-weight: 500;
       }
 
-      /* Character limit message */
       .sr-limit {
         font-size: 13px;
         color: #666;
         margin-top: 4px;
       }
 
-      /* Send Button (OrgBoard green) */
       .sr-send-btn {
         width: 100%;
         background: #2b6758;
@@ -1650,7 +1620,6 @@
         transition: 0.2s;
       }
 
-
       .sr-send-btn:hover {
         background-color: #00ffb3;
         transform: translateY(-2px);
@@ -1660,7 +1629,6 @@
         transform: translateY(0);
       }
 
-      /* Animation */
       @keyframes fadeIn {
         from { 
           transform: scale(0.9); opacity: 0; 
@@ -1671,7 +1639,6 @@
         }
       }
 
-      /* Overlay */
       .es-overlay {
         display: none;
         position: fixed;
@@ -1683,7 +1650,6 @@
         background: rgba(0,0,0,0.45);
       }
 
-      /* Modal Size (same as Send Reminder) */
       .es-modal-wide {
         width: 760px;
         background: #ffffff;
@@ -1707,7 +1673,6 @@
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
       }
 
-      /* Header */
       .es-header {
         background-color: #1f5f4e;
         color: white;
@@ -1735,7 +1700,6 @@
         color: #00ffb3; 
       }
 
-      /* Body */
       .es-body {
         padding: 25px 30px;
       }
@@ -1747,7 +1711,6 @@
         margin-top: 15px;
       }
 
-      /* Inputs match Send Reminder */
       .select.es-input {
         width: 100%;
         padding: 10px 12px;
@@ -1773,10 +1736,10 @@
 
         background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6l4 4 4-4' fill='%23215c4f' /%3E%3C/svg%3E");
         background-repeat: no-repeat;
-        background-position: right 22px center; /* adjust spacing */
+        background-position: right 22px center; 
         background-size: 14px;
 
-        padding-right: 50px; /* space for arrow */
+        padding-right: 50px; 
       }
 
       .es-input:focus, .es-textarea:focus {
@@ -1795,7 +1758,6 @@
         resize: none;
       }
 
-      /* Radio buttons */
       .es-radio-group {
         display: flex;
         gap: 30px;
@@ -1808,7 +1770,6 @@
         gap: 6px;
       }
 
-      /* Checkboxes */
       .es-check-group {
         margin-top: 12px;
         display: flex;
@@ -1816,7 +1777,6 @@
         gap: 6px;
       }
 
-      /* Error text */
       .es-err {
         color: #e74c3c;
         font-size: 13px;
@@ -1825,7 +1785,6 @@
         font-weight: 500;
       }
 
-      /* Full-width button like Send Reminder */
       .es-save-wide {
         width: 100%;
         background: #2b6758;
@@ -1839,7 +1798,6 @@
         transition: 0.2s;
       }
 
-
       .es-save-wide:hover {
         background-color: #255a4b;
         transform: translateY(-2px);
@@ -1849,7 +1807,6 @@
         transform: translateY(0);
       }
 
-      /* Animation */
       @keyframes esPop {
         from { 
           transform: scale(0.85); opacity: 0; 
@@ -1859,7 +1816,7 @@
           transform: scale(1); opacity: 1; 
         }
       }
-      /* Success modal (copied from login-page design) */
+
       .success-modal{
         position:fixed;
         top:0;left:0;width:100%;height:100%;
@@ -1868,9 +1825,10 @@
         opacity:0;pointer-events:none;transition:opacity 0.25s ease;z-index:1000;
       }
 
-      .success-modal.active{opacity:1;pointer-events:auto}
+      .success-modal.active {
+        opacity:1;pointer-events:auto
+      }
 
-      /* Match login-page modal sizing exactly */
       .success-modal .card{
         position:relative;
         width:100%;
@@ -1900,15 +1858,39 @@
         font-weight:700;
       }
 
-      .success-modal .success-text{font-size:1.05rem;color:#333;margin-top:6px;display:block}
-      .success-modal .card { background: #fff !important; }
-      .success-modal .card p { color: #333 !important; font-weight:400 !important; }
+      .success-modal .success-text {
+        font-size:1.05rem;
+        color:#333;
+        margin-top:6px;
+        display: block;
+      }
 
-      .success-modal.active .card{animation:floatIn 0.28s ease}
+      .success-modal .card { 
+        background: #fff !important; 
+      }
 
-      @keyframes floatIn{0%{transform:translateY(-10px);opacity:0}100%{transform:translateY(0);opacity:1}}
-    </style>
-  </head>
+      .success-modal .card p { 
+        color: #333 !important; 
+        font-weight:400 !important; 
+      }
+
+      .success-modal.active .card {
+        animation:floatIn 0.28s ease
+      }
+
+      @keyframes floatIn {
+        0% {
+          transform:translateY(-10px);opacity:0
+        }
+
+          100%{
+            transform:translateY(0);
+            opacity:1
+          }
+        }
+
+      </style>
+    </head>
 
     <body>
       <header>
@@ -1921,10 +1903,10 @@
         </div>
         <div class="icons">
           <button id="mobileMenuBtn" class="mobile-menu-btn" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">☰</button>
-          <!-- Notification bell (inline SVG) -->
+
           <div class="notif-container" style="position:relative;">
             <button id="notifBtn" class="notif-btn" aria-label="Notifications" title="Notifications">
-              <!-- Bell SVG -->
+
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path d="M15 17H9a3 3 0 0 1-3-3v-3c0-3.07 1.63-5.64 4.5-6.32V4a1.5 1.5 0 0 1 3 0v.68C16.37 5.36 18 7.92 18 11v3a3 3 0 0 1-3 3z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1966,7 +1948,7 @@
               </div>
             </div>
           </div>
-        <!-- PROFILE DROPDOWN -->
+       
     <div class="profile-container">
       <button class="profile-btn" id="profileBtn">
         <img id="profileImage" class="profile-img" src="" alt="Profile" style="display:none;">
@@ -1993,7 +1975,6 @@
       </div>
     </div>
 
-    <!-- FontAwesome for icons -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 
@@ -2135,7 +2116,6 @@
       <div class="search-wrapper">
         <input type="text" id="searchInput" placeholder="Search financial reports..." />
         <button id="searchBtn" class="search-btn" aria-label="Search">
-          <!-- Embedded SVG icon (consistent OrgBoard style) -->
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round"
@@ -2147,8 +2127,6 @@
       </div>
     </div>
 
-
-        <!-- 🎛 Second Row: Dropdowns -->
         <div class="filter-row dropdown-row">
           <select id="monthFilter">
             <option value="">Select Month / Year</option>
@@ -2240,7 +2218,6 @@
         </table>
       </div>
 
-        <!-- ==== ACTION BUTTONS BELOW TABLE ==== -->
         <div class="financial-report-actions">
           <button class="check-budget-btn" onclick="bc_openModal()">Check Budget</button>
           <button class="send-reminders-btn" onclick="sr_open()">Send Reminder</button>
@@ -2310,8 +2287,6 @@
       </div>
     </section>
 
-
-      <!-- ==== MODAL ==== -->
       <div class="modal-overlay" id="eventsModal">
         <div class="modal">
           <div class="modal-header">
@@ -2321,7 +2296,6 @@
                 <button class="close-modal" id="closeModal">&times;</button>
               </div>
           </div>
-
 
           <div class="modal-content">
             <div>
@@ -2365,7 +2339,6 @@
         </div>
       </div>
 
-      <!-- ==== FLOATING EVENT DETAILS CARD ==== -->
       <div class="details-float" id="detailsFloat">
         <div class="details-content">
           <div class="details-header">
@@ -2382,20 +2355,16 @@
         </div>
       </div>
 
-    <!-- === BUDGET CHECK MODAL === -->
     <div id="bc-modal-overlay" class="bc-overlay">
         <div class="bc-modal">
 
-            <!-- HEADER -->
             <div class="bc-modal-header">
                 <h2>Budget Check</h2>
                 <button class="bc-close-btn" onclick="bc_closeModal()">&times;</button>
             </div>
 
-            <!-- CONTENT WRAPPER -->
             <div class="bc-modal-content">
 
-                <!-- STATUS BOXES -->
                 <div class="bc-status-row">
                     <div class="bc-status-box pending">
                         <h3>4</h3>
@@ -2411,7 +2380,6 @@
                     </div>
                 </div>
 
-                <!-- LIST OF REQUESTS -->
                 <div class="bc-card">
                     <h4>Social Work Org</h4>
                     <p>Outreach Project</p>
@@ -2436,7 +2404,6 @@
         </div>
     </div>
 
-    <!-- ===== BUDGET DETAILS FOR SOCIAL WORK ===== -->
     <div id="budgetSocialWork" class="bd-modal-overlay">
       <div class="bd-modal-box">
         
@@ -2456,7 +2423,6 @@
       </div>
     </div>
 
-    <!-- ===== BUDGET DETAILS FOR SOCIAL CLUB ===== -->
     <div id="budgetSocialClub" class="bd-modal-overlay">
       <div class="bd-modal-box">
         
@@ -2474,10 +2440,8 @@
         </div>
 
       </div>
-    </div>
-
-    <!-- ===== BUDGET DETAILS FOR ART SOCIETY ===== -->
-    <div id="budgetArtSociety" class="bd-modal-overlay">
+      </div>
+      <div id="budgetArtSociety" class="bd-modal-overlay">
       <div class="bd-modal-box">
         
         <div class="bd-modal-header">
@@ -2496,8 +2460,6 @@
       </div>
     </div>
 
-
-    <!-- SEND REMINDER MODAL -->
     <div id="sr-modal-overlay" class="sr-overlay">
       <div class="sr-modal-box">
         
@@ -2508,37 +2470,29 @@
 
         <div class="sr-body">
 
-          <!-- Recipient -->
           <label>Recipient</label>
           <input type="text" id="sr-recipient" autocomplete="off">
           <p class="sr-error" id="sr-recipient-error"></p>
 
-          <!-- Subject -->
           <label>Subject</label>
           <input type="text" id="sr-subject" autocomplete="off">
           <p class="sr-error" id="sr-subject-error"></p>
 
-          <!-- Message -->
           <label>Message</label>
           <textarea id="sr-message" rows="5"></textarea>
           <p class="sr-error" id="sr-message-error"></p>
 
-          <!-- Character limit -->
           <p class="sr-limit" id="sr-message-limit"></p>
 
-          <!-- SEND BUTTON -->
           <button class="sr-send-btn" onclick="sr_send()">Send</button>
 
         </div>
       </div>
     </div>
 
-
-    <!-- ============== EVENT STATUS UPDATE MODAL (FULL WIDTH) ============== -->
     <div id="esModalOverlay" class="es-overlay">
       <div class="es-modal-wide">
 
-        <!-- HEADER -->
         <div class="es-header">
           <h2>Event Status Update</h2>
           <span class="es-close-btn" onclick="es_closeModal()">×</span>
@@ -2546,7 +2500,6 @@
 
         <div class="es-body">
 
-          <!-- EVENT TYPE -->
           <label class="es-label">Event Type</label>
           <div class="es-radio-group">
             <label class="es-radio-item">
@@ -2560,7 +2513,6 @@
           </div>
           <p class="es-err" id="esErrType"></p>
 
-          <!-- CURRENT STATUS -->
           <label class="es-label">Current Status</label>
           <select id="esCurrentStatus" class="es-input">
             <option value="">Select Status</option>
@@ -2571,28 +2523,22 @@
           </select>
           <p class="es-err" id="esErrStatus"></p>
 
-          <!-- CHECKBOXES -->
           <div class="es-check-group">
             <label><input type="checkbox" id="esPendingReview"> Pending Review</label>
             <label><input type="checkbox" id="esRequiresFollowUp"> Requires Follow-Up</label>
           </div>
 
-          <!-- NOTES -->
           <label class="es-label">Notes / Updates</label>
           <textarea id="esNotes" maxlength="250" class="es-textarea"></textarea>
           <p class="es-err" id="esErrNotes"></p>
 
-          <!-- BUTTON -->
           <button class="es-save-wide" onclick="es_saveChanges()">Save</button>
 
         </div>
       </div>
     </div>
 
-
-
     <script>
-      // ====== PROGRESS CHART ======
       const ctx = document.getElementById("progressChart").getContext("2d");
       new Chart(ctx, {
         type: "line",
@@ -2620,7 +2566,6 @@
         },
       });
 
-      // ====== MODAL FUNCTIONALITY ======
       const modal = document.getElementById("eventsModal");
       const openModal = document.getElementById("eventsViewBtn");
       const closeModal = document.getElementById("closeModal");
@@ -2642,7 +2587,6 @@
         }
       });
 
-      // ===== SEARCH IN EVENTS MODAL =====
       const searchInput = document.querySelector(".modal-header input");
       const eventCards = document.querySelectorAll(".modal-content .event-card");
 
@@ -2654,7 +2598,6 @@
         });
       });
 
-      // ===== REFRESH ICON FUNCTION =====
       const refreshBtn = document.getElementById("refreshModal");
       refreshBtn?.addEventListener("click", () => {
         refreshBtn.style.transform = "rotate(360deg)";
@@ -2669,7 +2612,6 @@
         });
       });
 
-      // ===== EVENT DETAILS FLOATING CARD =====
       const detailsFloat = document.getElementById("detailsFloat");
       const closeDetails = document.getElementById("closeDetails");
       const eventName = document.getElementById("eventName");
@@ -2713,7 +2655,6 @@
         }
       });
 
-      // ===== DASHBOARD ↔ FINANCIAL REPORT ↔ PROGRESS TRACKING TOGGLE =====
       const dashboardSection = document.getElementById("dashboardSection");
       const financialReportSection = document.getElementById("financialReportSection");
       const progressTrackingSection = document.getElementById("progressTrackingSection"); // ⬅ added
@@ -2722,7 +2663,6 @@
       const financialLink = document.getElementById("financialLink");
       const progressLink = document.getElementById("progressLink"); // ⬅ added
 
-      // Default: show dashboard only
       financialReportSection.style.display = "none";
       progressTrackingSection.style.display = "none";
 
@@ -2758,7 +2698,6 @@
         setActiveLink(progressLink);
       });
 
-      // ===== FINANCIAL REPORT SEARCH & FILTER =====
       document.addEventListener("DOMContentLoaded", () => {
         const searchInput = document.getElementById("searchInput");
         const monthFilter = document.getElementById("monthFilter");
@@ -2788,14 +2727,12 @@
         reportFilter?.addEventListener("change", filterTable);
       });
 
-      // ==== Example user data (normally from create account or backend) ====
       const userData = {
         name: localStorage.getItem("userName") || "User",
         role: localStorage.getItem("userRole") || "Event Coordinator",
-        image: localStorage.getItem("userImage") || "" // can be base64 or URL
+        image: localStorage.getItem("userImage") || ""
       };
 
-      // ==== Display user info ====
       const nameDisplay = document.getElementById("profileName");
       const roleDisplay = document.getElementById("profileRole");
       const profileBtnImg = document.getElementById("profileImage");
@@ -2808,7 +2745,6 @@
       profileBtnInitial.textContent = userData.name.charAt(0).toUpperCase();
       dropdownInitial.textContent = userData.name.charAt(0).toUpperCase();
 
-      // Show profile image if available
       if (userData.image) {
         profileBtnImg.src = userData.image;
         dropdownImg.src = userData.image;
@@ -2818,7 +2754,6 @@
         dropdownInitial.style.display = "none";
       }
 
-      // ==== Toggle dropdown ====
       const profileBtn = document.getElementById("profileBtn");
       const dropdown = document.getElementById("profileDropdown");
 
@@ -2826,22 +2761,18 @@
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
       });
 
-      // Close dropdown when clicking outside
       document.addEventListener("click", (e) => {
         if (!profileBtn.contains(e.target) && !dropdown.contains(e.target)) {
           dropdown.style.display = "none";
         }
       });
 
-      // ==== Notifications toggle ==== 
       const notifBtnEl = document.getElementById('notifBtn');
       const notifDropdownEl = document.getElementById('notifDropdown');
       const notifBadgeEl = document.getElementById('notifBadge');
 
-      // Show sample badge if there are items (this value normally comes from backend)
       if (notifBadgeEl) {
-        // Example: show badge when count > 0
-        const count = 3; // replace with real unread count
+        const count = 3; 
         if (count > 0) {
           notifBadgeEl.textContent = String(count);
           notifBadgeEl.style.display = 'inline-block';
@@ -2852,12 +2783,10 @@
         notifBtnEl.addEventListener('click', (ev) => {
           ev.stopPropagation();
           const isOpen = notifDropdownEl.style.display === 'block';
-          // close profile dropdown if open
           if (dropdown && dropdown.style.display === 'block') dropdown.style.display = 'none';
           notifDropdownEl.style.display = isOpen ? 'none' : 'block';
         });
 
-        // Close notif dropdown when clicking outside
         document.addEventListener('click', (e) => {
           if (!notifBtnEl.contains(e.target) && !notifDropdownEl.contains(e.target)) {
             notifDropdownEl.style.display = 'none';
@@ -2865,7 +2794,6 @@
         });
       }
 
-      // ===== Notification interactions =====
       function updateBadgeCount() {
         const list = document.querySelectorAll('#notifList .notif-entry.unread');
         const count = list.length;
@@ -2875,7 +2803,6 @@
         }
       }
 
-      // Mark all read
       const markAllBtn = document.getElementById('markAllRead');
       if (markAllBtn) {
         markAllBtn.addEventListener('click', (ev) => {
@@ -2886,23 +2813,17 @@
         });
       }
 
-      // Click an entry: mark read and close dropdown (or navigate)
       document.addEventListener('click', (e) => {
         const entry = e.target.closest && e.target.closest('.notif-entry');
         if (entry && document.getElementById('notifList')?.contains(entry)) {
           e.preventDefault();
-          // mark as read
           entry.classList.remove('unread');
           updateBadgeCount();
-          // optional: close dropdown or navigate
-          // notifDropdownEl.style.display = 'none';
         }
       });
 
-      // Initialize badge on load
       updateBadgeCount();
 
-      // ==== Log Out ====
       const logoutBtn = document.getElementById('logoutBtn');
       if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
@@ -2918,8 +2839,6 @@
         });
       }
 
-        // ===== BUDGET CHECK BUTTON  =====
-
         function bc_openModal() {
             document.getElementById("bc-modal-overlay").style.display = "flex";
         }
@@ -2928,7 +2847,6 @@
             document.getElementById("bc-modal-overlay").style.display = "none";
         }
 
-    // ===== SOCIAL WORK =====
     function openSocialWork() {
       document.getElementById("budgetSocialWork").style.display = "flex";
     }
@@ -2937,7 +2855,6 @@
       document.getElementById("budgetSocialWork").style.display = "none";
     }
 
-    // ===== SOCIAL CLUB =====
     function openSocialClub() {
       document.getElementById("budgetSocialClub").style.display = "flex";
     }
@@ -2946,7 +2863,6 @@
       document.getElementById("budgetSocialClub").style.display = "none";
     }
 
-    // ===== ART SOCIETY =====
     function openArtSociety() {
       document.getElementById("budgetArtSociety").style.display = "flex";
     }
@@ -2956,7 +2872,6 @@
     }
 
 
-    // Max length for Send Reminder message
     const SR_MAX_MESSAGE = 1000;
 
     function sr_open() {
@@ -2967,7 +2882,6 @@
       document.getElementById("sr-modal-overlay").style.display = "none";
     }
 
-    // SEND FUNCTION WITH VALIDATION
     function sr_send() {
       let ok = true;
 
@@ -2979,10 +2893,8 @@
       const se = document.getElementById("sr-subject-error");
       const me = document.getElementById("sr-message-error");
 
-      // Reset error state
       re.style.display = se.style.display = me.style.display = "none";
 
-      // Required validation (login style)
       if (r.value.trim() === "") {
         re.textContent = "This field is required";
         re.style.display = "block";
@@ -3001,7 +2913,6 @@
         ok = false;
       }
 
-      // Max message limit
       if (m.value.length > SR_MAX_MESSAGE) {
         me.textContent = `Maximum of ${SR_MAX_MESSAGE} characters only`;
         me.style.display = "block";
@@ -3010,20 +2921,17 @@
 
       if (!ok) return;
 
-      // SUCCESS — show the site-wide success modal (same as logout)
       const successMsgEl = document.getElementById('successMessage');
       const successModal = document.getElementById('successCard');
       if (successMsgEl) successMsgEl.textContent = 'Your reminder has been sent successfully!';
       if (successModal) successModal.classList.add('active');
 
-      // Close the success modal after 3s and then close the send-reminder modal
       setTimeout(() => {
         if (successModal) successModal.classList.remove('active');
         sr_close();
       }, 3000);
     }
 
-    /* Live message limit counter */
     document.getElementById("sr-message").addEventListener("input", () => {
       const msg = document.getElementById("sr-message");
       const limit = document.getElementById("sr-message-limit");
@@ -3031,23 +2939,19 @@
       limit.textContent = `${msg.value.length} / ${SR_MAX_MESSAGE}`;
     });
 
-    // OPEN MODAL
     function es_openModal() {
       document.getElementById("esModalOverlay").style.display = "flex";
     }
 
-    // CLOSE MODAL
     function es_closeModal() {
       document.getElementById("esModalOverlay").style.display = "none";
     }
 
-    // NOTES COUNTER
     document.addEventListener("input", function() {
       const notes = document.getElementById("esNotes").value.length;
       document.getElementById("esNotesCount").textContent = notes;
     });
 
-    // SAVE VALIDATION
     function es_saveChanges() {
       let valid = true;
 
@@ -3075,20 +2979,17 @@
         notes,
       });
 
-      // Show site-wide success modal (re-using existing successCard)
       const successMsgEl = document.getElementById('successMessage');
       const successModal = document.getElementById('successCard');
       if (successMsgEl) successMsgEl.textContent = 'Event status has been updated successfully!';
       if (successModal) successModal.classList.add('active');
 
-      // Close the success modal after 3s and then close the Event Status modal
       setTimeout(() => {
         if (successModal) successModal.classList.remove('active');
         es_closeModal();
       }, 3000);
     }
     </script>
-    <!-- SUCCESS (copied login-page design) -->
     <div class="success-modal" id="successCard">
       <div class="card">
         <div class="success-icon">&#10003;</div>
