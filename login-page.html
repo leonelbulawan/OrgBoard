@@ -4,28 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - OrgBoard</title>
-      <link rel="stylesheet" href="assets/css/main.css">
-      <style>
-        *{
-          margin:0;
-          padding:0;
-          box-sizing:border-box;
-        }
-        body{
-          min-height:100vh;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          background:#2b6758;
-          padding:60px;
-        }
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+      *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+      }
+      body{
+        min-height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:#2b6758;
+        padding:60px;
+      }
 
-     .main-container{
+      .main-container{
         width:100%;
         max-width:1400px;
-        /* Prevent the layout from shrinking when the viewport is zoomed out
-          or made narrower; this keeps elements at their intended size and
-          shows a horizontal scrollbar instead of scaling everything down. */
         min-width:900px;
         display:flex;
         gap:30px;
@@ -97,7 +94,6 @@
         text-align:center;
       }
 
-      /* Shift the login/create card slightly to the right */
       .right-section .card {
         margin-left: 30px;
       }
@@ -331,7 +327,7 @@
         .card{
           max-width:580px;
         }  
-        /* Reset the horizontal shift on smaller screens */
+
         .right-section .card { margin-left: 0; }
       }
 
@@ -355,8 +351,6 @@
         }
       }
 
-
-      /* ==== ROLE SELECTION MODALS ==== */
       #roleSelectModal .card,
       #officerRoleModal .card {
         max-width: 420px;
@@ -397,7 +391,6 @@
         transform: scale(1.02);
       }
 
-      /* Back buttons (plain green text with underline on hover) */
       .back-link {
         background: none;
         border: none;
@@ -412,7 +405,6 @@
         color:#00ffb3;
       }
 
-      /* Add subtle animation when modal appears */
       .modal.active .card {
         animation: floatIn 0.3s ease;
       }
@@ -464,7 +456,6 @@
           <p>Don't have an account? <a href="#" class="simple-link" id="showCreate">Create Account</a></p>
         </div>
 
-        <!-- CREATE ACCOUNT -->
         <div class="card" id="createCard" style="display:none;">
           <h2>Create Account</h2>
           <p>Fill in the details to create your account</p>
@@ -502,7 +493,6 @@
       </div>
     </div>
 
-    <!-- FORGOT PASSWORD -->
     <div class="modal" id="forgotCard">
       <div class="card">
         <h2>Forgot Password</h2>
@@ -518,7 +508,6 @@
       </div>
     </div>
 
-    <!-- OTP -->
     <div class="modal" id="otpCard">
       <div class="card">
         <h2>Verify Email</h2>
@@ -536,7 +525,6 @@
       </div>
     </div>
 
-    <!-- RESET PASSWORD -->
     <div class="modal" id="resetCard">
       <div class="card">
         <h2>Change Password</h2>
@@ -562,7 +550,6 @@
       </div>
     </div>
 
-    <!-- SUCCESS -->
     <div class="modal" id="successCard">
       <div class="card">
         <div class="success-icon">&#10003;</div>
@@ -570,7 +557,6 @@
       </div>
     </div>
 
-    <!-- ROLE SELECTION MODAL -->
     <div class="modal" id="roleSelectModal">
       <div class="card">
         <h2>Log in as</h2>
@@ -585,7 +571,6 @@
       </div>
     </div>
 
-    <!-- OFFICER ROLE SELECTION MODAL -->
     <div class="modal" id="officerRoleModal">
       <div class="card">
         <h2>Select Officer Role</h2>
@@ -602,13 +587,11 @@
     <script>
       const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      // Show/Hide Cards
       document.getElementById('showCreate').onclick=()=>{document.getElementById('loginCard').style.display='none';document.getElementById('createCard').style.display='block';};
       document.getElementById('showLogin').onclick=()=>{document.getElementById('createCard').style.display='none';document.getElementById('loginCard').style.display='block';};
       function showModal(id){document.getElementById(id).classList.add('active');}
       function closeModal(id){document.getElementById(id).classList.remove('active');}
 
-      // OTP inputs
       document.querySelectorAll('.otp-inputs').forEach(group=>{
         const inputs=group.querySelectorAll('input');
         inputs.forEach((input,i)=>{
@@ -622,7 +605,6 @@
         });
       });
 
-      // OTP countdown
       let otpTime=60,otpTimer;
       function startOtpCountdown(){
         otpTime=60;
@@ -638,19 +620,16 @@
       }
       document.getElementById('resendOtp').onclick=()=>{startOtpCountdown(); alert("Verification code resent!");};
 
-      // CREATE ACCOUNT
       document.getElementById('createBtn').onclick = () => {
         const fullName = document.getElementById('fullName').value.trim();
         const email = document.getElementById('createEmail').value.trim();
         const password = document.getElementById('createPassword').value.trim();
         const confirm = document.getElementById('confirmPassword').value.trim();
 
-        // Required / Email validation
         document.getElementById('fullNameError').style.display=!fullName?'block':'none';
         document.getElementById('createEmailRequired').style.display=!email?'block':'none';
         document.getElementById('createEmailInvalid').style.display=email && !emailRegex.test(email)?'block':'none';
 
-        // Password validation
         document.getElementById('createPasswordRequired').style.display=!password?'block':'none';
         document.getElementById('createPasswordShort').style.display=password && password.length<8?'block':'none';
 
@@ -669,7 +648,6 @@
         }
       };
 
-      // LOGIN
       document.getElementById('loginBtn').onclick=()=>{
         const email=document.getElementById('loginEmail').value.trim();
         const password=document.getElementById('loginPassword').value.trim();
@@ -684,7 +662,6 @@
         }
       };
 
-      // FORGOT PASSWORD
       document.getElementById('sendForgotBtn').onclick=()=>{
         const email=document.getElementById('forgotEmail').value.trim();
         document.getElementById('forgotEmailRequired').style.display=!email?'block':'none';
@@ -696,13 +673,11 @@
         }
       };
 
-      // OTP confirm → go to reset password
       document.getElementById('otpConfirmBtn').onclick=()=>{
         closeModal('otpCard');
         showModal('resetCard');
       };
 
-      // RESET PASSWORD
       document.getElementById('updatePasswordBtn').onclick=()=>{
         const newP=document.getElementById('newPassword').value.trim();
         const confirmP=document.getElementById('confirmNewPassword').value.trim();
@@ -725,14 +700,13 @@
         }
       };
 
-      // === ROLE SELECTION HANDLER ===
       document.querySelectorAll('.role-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const role = btn.getAttribute('data-role');
           closeModal('roleSelectModal');
 
             if (role === 'officer') {
-              // show officer roles modal
+
               showModal('officerRoleModal');
             } else if (role === 'student') {
               document.getElementById('successMessage').textContent = `Your account has been logged in successfully!`;
@@ -759,7 +733,6 @@
         });
       });
 
-      // === OFFICER ROLES HANDLER ===
       document.querySelectorAll('.officer-role').forEach(btn => {
         btn.addEventListener('click', () => {
           const officer = btn.getAttribute('data-officer');
@@ -783,10 +756,9 @@
         });
       });
 
-      // === BACK BUTTONS ===
       document.getElementById('backToLogin').onclick = () => {
         closeModal('roleSelectModal');
-        // go back to login form
+
         document.getElementById('loginCard').style.display = 'block';
       };
 
