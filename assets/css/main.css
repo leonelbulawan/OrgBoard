@@ -40,3 +40,30 @@ nav a.active {
     box-shadow: none;
     -webkit-box-shadow: none;
 }
+
+/* Upload Report (Secretary) checkbox: match brand color and remove shadows */
+.ur-checkbox input[type="checkbox"],
+#ur-approved {
+    accent-color: #2b6758;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    outline: none;
+}
+
+.ur-checkbox input[type="checkbox"]:focus,
+#ur-approved:focus,
+.ur-checkbox input[type="checkbox"]:focus-visible,
+#ur-approved:focus-visible {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    outline: none;
+    border-color: #2b6758;
+}
+
+.ur-checkbox input[type="checkbox"]:checked,
+#ur-approved:checked {
+    background-color: #2b6758;
+    border-color: #2b6758;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
