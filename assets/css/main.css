@@ -1,0 +1,13 @@
+/* Apply Poppins font to the whole site */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+/* Active nav link highlighting */
+nav a.active {
+    color: #00ffb3;
+    font-weight: 700;
+    text-decoration: none;
+}

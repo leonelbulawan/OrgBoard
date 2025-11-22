@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - OrgBoard</title>
+      <link rel="stylesheet" href="assets/css/main.css">
+      <style>
+        *{
+          margin:0;
+          padding:0;
+          box-sizing:border-box;
+        }
+        body{
+          min-height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:#2b6758;
+          padding:60px;
+        }
+
+     .main-container{
+        width:100%;
+        max-width:1400px;
+        /* Prevent the layout from shrinking when the viewport is zoomed out
+          or made narrower; this keeps elements at their intended size and
+          shows a horizontal scrollbar instead of scaling everything down. */
+        min-width:900px;
+        display:flex;
+        gap:30px;
+        align-items:center;
+        justify-content:space-between;
+      }
+
+     .left-section{
+        flex:1;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        color:#fff;
+      }
+
+      .logo{
+        width:220px;
+        height:220px;
+        border-radius:50%;
+        object-fit:cover;
+        animation:pulseGlow 2s infinite;
+        box-shadow:0 0 15px #00ffb3;
+      }
+
+      @keyframes pulseGlow{
+        0%{
+          box-shadow:0 0 10px #00ffb3;
+        }
+
+        50%{
+          box-shadow:0 0 25px #00ffb3;
+        }
+
+        100%{
+          box-shadow:0 0 10px #00ffb3;
+        }
+      }
+
+      .system-name{font-size:2.5rem; 
+        font-weight:700;
+        margin-top:15px;
+      }
+
+      .system-subtitle{
+        font-size:1.1rem;
+        margin-top:5px;
+        color:white;
+        opacity:0.9;
+      }
+
+      .right-section{
+        flex:1;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        position:relative;
+      }
+
+      .card{
+        background:#fff;
+        color:#333;
+        width:100%;
+        max-width:590px;
+        padding:60px 60px;
+        border-radius:15px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.25);
+        text-align:center;
+      }
+
+      /* Shift the login/create card slightly to the right */
+      .right-section .card {
+        margin-left: 30px;
+      }
+
+      h2{
+        color:#2b6758;
+        font-size:1.8rem;
+        margin-bottom:10px;
+      }
+
+      p{
+        color:#555;
+        font-size:0.95rem;
+        margin-bottom:30px;
+        line-height:1.5;
+      }
+
+      .form-group{
+        width:100%;
+        text-align:left;
+        margin-bottom:15px;
+      }
+
+      label{
+        display:block;
+        font-size:0.9rem;
+        color:#333;
+        margin-bottom:5px;
+        font-weight:500;
+      }
+
+      input[type="email"],
+      input[type="password"],
+      input[type="text"]{
+        width:100%;
+        padding:12px 15px;
+        border:2px solid #ccc;
+        border-radius:6px;
+        font-size:0.95rem;
+        outline:none;
+        transition:border-color 0.3s, box-shadow 0.3s;
+      }
+
+      input:focus{
+        border-color:#2b6758;
+        box-shadow:0 0 5px #2b6758;
+      }
+
+      .error-message{
+        font-size:0.8rem;
+        color:#d93025;
+        margin-top:4px;
+        display:none;
+      }
+
+      .password-container{
+        display:flex;
+        align-items:center;
+        gap:10px;
+      }
+
+      .eye-btn{
+        background:#f5f5f5;
+        border:2px solid #ccc;
+        border-radius:6px;
+        padding:10px;
+        cursor:pointer;
+        transition:background 0.3s, border-color 0.3s;
+      }
+
+      .eye-btn:hover{
+        background:white;
+        border-color:#2b6758;
+      }
+
+     .btn{
+        width:100%;
+        background-color:#2b6758;
+        color:#fff;
+        border:none;
+        padding:12px;
+        font-size:1rem;
+        border-radius:6px;
+        cursor:pointer;
+        transition:background 0.3s ease, transform 0.2s;
+        margin-top:10px;
+      }
+
+      .btn:hover{
+        background-color:#00ffb3;
+        transform:scale(1.02);
+      }
+
+      .remember-forgot{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+        font-size:0.9rem;
+      }
+
+      .remember-forgot label{
+        display:flex;
+        align-items:center;
+        gap:5px;color:#333;
+        cursor:pointer;
+      }
+
+      .remember-forgot a{
+        color:#2b6758;
+        text-decoration:none;
+        transition:0.3s;
+      }
+
+      .remember-forgot a:hover{
+        color: #00ffb3;
+      }
+
+      a.simple-link{
+        display:inline-block;
+        margin-top:35px;
+        color:#2b6758;
+        font-size:0.9rem;
+        text-decoration:none;
+      }
+
+      a.simple-link:hover{
+        color: #00ffb3;
+      }
+
+      .otp-inputs{
+        display:flex;
+        justify-content:center;
+        gap:12px;
+        margin-bottom:15px;
+      }
+
+      .otp-inputs input{
+        width:45px;height:50px;text-align:center;font-size:1.2rem;
+        border:2px solid #ccc;border-radius:6px;transition: all 0.3s;
+      }
+
+      .otp-inputs input:focus{
+        border-color:#2b6758;
+        box-shadow:0 0 5px #2b6758;
+        outline:none;
+      }
+
+     .modal{
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        background:rgba(0,0,0,0.5);
+        opacity:0;
+        pointer-events:none;
+        transition:opacity 0.3s ease;z-index:1000;
+      }
+
+      .modal.active{
+        opacity:1;
+        pointer-events:auto;
+      }
+
+      .modal .card{
+        position: relative;
+        max-width:400px;
+        padding:60px 60px;
+        border-radius:15px;
+        text-align:center;
+        background:#ffffff;
+        color:#333;
+        box-shadow:0 10px 25px rgba(0,0,0,0.25);
+        box-sizing:border-box;
+      }
+
+      .success-icon{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        width:100px;
+        height:100px;
+        margin:0 auto 20px;
+        border-radius:50%;
+        background-color:#2b6758;
+        color:#fff;
+        font-size:64px;
+        line-height:1;
+        font-weight:700;
+      }
+
+      .countdown{
+        font-size:0.9rem;
+        margin-top:5px;
+        cursor:pointer;
+        display:none;
+        color:#888;
+      }
+
+      .resend-text{
+        font-size:0.85rem;
+        margin-top:20px;
+        color:#555;
+      }
+
+      .resend-link{
+        color:#2b6758;
+        cursor:pointer;
+        text-decoration:none;
+      }
+
+      .resend-link:hover{
+        color:#00ffb3;
+      }
+
+      @media (max-width:900px){
+        .main-container{
+          flex-direction:column;
+          text-align:center;
+        }
+
+        .right-section{
+          justify-content:center;
+          margin-top:10px;
+        }
+ 
+        .card{
+          max-width:580px;
+        }  
+        /* Reset the horizontal shift on smaller screens */
+        .right-section .card { margin-left: 0; }
+      }
+
+      @media (max-width:600px){
+        .main-container{
+          padding:0px;gap:0px;
+        }
+
+        .card{
+          width:100%;
+          padding:35px 70px;
+        }
+
+        .system-name{
+          font-size:2rem;
+        }
+
+        .logo {
+          width: 160px;
+          height: 160px;
+        }
+      }
+
+
+      /* ==== ROLE SELECTION MODALS ==== */
+      #roleSelectModal .card,
+      #officerRoleModal .card {
+        max-width: 420px;
+        text-align: center;
+        padding: 40px 40px;
+      }
+
+      #roleSelectModal h2,
+      #officerRoleModal h2 {
+        color: #2b6758;
+        font-size:1.8rem;
+        margin-bottom: 10px;
+      }
+
+      #roleSelectModal p,
+      #officerRoleModal p {
+        color: #555;
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+      }
+
+      .role-btn,
+      .officer-role {
+        width: 100%;
+        background-color: #2b6758;
+        color: #fff;
+        border: none;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s;
+      }
+
+      .role-btn:hover,
+      .officer-role:hover {
+        background-color:#00ffb3;
+        transform: scale(1.02);
+      }
+
+      /* Back buttons (plain green text with underline on hover) */
+      .back-link {
+        background: none;
+        border: none;
+        color: #2b6758;
+        font-size: 0.95rem;
+        cursor: pointer;
+        text-decoration: none;
+        margin-top: 20px;
+      }
+
+      .back-link:hover {
+        color:#00ffb3;
+      }
+
+      /* Add subtle animation when modal appears */
+      .modal.active .card {
+        animation: floatIn 0.3s ease;
+      }
+
+      @keyframes floatIn {
+        0% {
+          transform: translateY(-10px);
+          opacity: 0;
+        }
+
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="left-section">
+        <img src="assets/img/logo.jpg" alt="OrgBoard Logo" class="logo">
+        <h1 class="system-name">OrgBoard</h1>
+        <p class="system-subtitle">Your campus organization`s financial hub.</p>
+      </div>
+
+      <div class="right-section">
+        <div class="card" id="loginCard">
+          <h2>Log In</h2>
+          <p>Enter your credentials to log in</p>
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail">
+            <div class="error-message" id="loginEmailRequired">This field is required</div>
+            <div class="error-message" id="loginEmailInvalid">Please enter a valid email</div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="password-container">
+              <input type="password" id="loginPassword">
+            </div>
+            <div class="error-message" id="loginPasswordRequired">This field is required</div>
+            <div class="error-message" id="loginPasswordShort">Password must be at least 8 characters</div>
+          </div>
+          <div class="remember-forgot">
+            <label><input type="checkbox"> Remember me</label>
+            <a href="#" onclick="showModal('forgotCard')">Forgot Password?</a>
+          </div>
+          <button class="btn" id="loginBtn">Log In</button>
+          <p>Don't have an account? <a href="#" class="simple-link" id="showCreate">Create Account</a></p>
+        </div>
+
+        <!-- CREATE ACCOUNT -->
+        <div class="card" id="createCard" style="display:none;">
+          <h2>Create Account</h2>
+          <p>Fill in the details to create your account</p>
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName">
+            <div class="error-message" id="fullNameError">This field is required</div>
+          </div>
+          <div class="form-group">
+            <label for="createEmail">Email</label>
+            <input type="email" id="createEmail">
+            <div class="error-message" id="createEmailRequired">This field is required</div>
+            <div class="error-message" id="createEmailInvalid">Please enter a valid email</div>
+          </div>
+          <div class="form-group">
+            <label for="createPassword">Password</label>
+            <div class="password-container">
+              <input type="password" id="createPassword">
+            </div>
+            <div class="error-message" id="createPasswordRequired">This field is required</div>
+            <div class="error-message" id="createPasswordShort">Password must be at least 8 characters</div>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <div class="password-container">
+              <input type="password" id="confirmPassword">
+            </div>
+            <div class="error-message" id="confirmPasswordRequired">This field is required</div>
+            <div class="error-message" id="confirmPasswordShort">Password must be at least 8 characters</div>
+            <div class="error-message" id="confirmPasswordMismatch">Passwords must match</div>
+          </div>
+          <button class="btn" id="createBtn">Create Account</button>
+          <p>Already have an account? <a href="#" class="simple-link" id="showLogin">Log In</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div class="modal" id="forgotCard">
+      <div class="card">
+        <h2>Forgot Password</h2>
+        <p>Enter your email to receive a verification code</p>
+        <div class="form-group">
+          <label for="forgotEmail">Email</label>
+          <input type="email" id="forgotEmail">
+          <div class="error-message" id="forgotEmailRequired">This field is required</div>
+          <div class="error-message" id="forgotEmailInvalid">Please enter a valid email</div>
+        </div>
+        <button class="btn" id="sendForgotBtn">Send Code</button>
+        <a href="#" class="simple-link" onclick="closeModal('forgotCard')">Back to Login</a>
+      </div>
+    </div>
+
+    <!-- OTP -->
+    <div class="modal" id="otpCard">
+      <div class="card">
+        <h2>Verify Email</h2>
+        <p>Enter the 6-digit code sent to your email</p>
+        <div class="otp-inputs">
+          <input maxlength="1"><input maxlength="1"><input maxlength="1">
+          <input maxlength="1"><input maxlength="1"><input maxlength="1">
+        </div>
+        <button class="btn" id="otpConfirmBtn">Confirm</button>
+        <p class="resend-text">
+          Didn't receive code? 
+         <span class="resend-link" id="resendOtp">Resend Code</span>
+        </p>
+        <div class="countdown" id="otpCountdown">Resend in 60s</div>
+      </div>
+    </div>
+
+    <!-- RESET PASSWORD -->
+    <div class="modal" id="resetCard">
+      <div class="card">
+        <h2>Change Password</h2>
+        <p>Enter your new password below</p>
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <div class="password-container">
+            <input type="password" id="newPassword">
+          </div>
+          <div class="error-message" id="newPasswordRequired">This field is required</div>
+          <div class="error-message" id="newPasswordShort">Password must be at least 8 characters</div>
+        </div>
+        <div class="form-group">
+          <label for="confirmNewPassword">Confirm Password</label>
+          <div class="password-container">
+            <input type="password" id="confirmNewPassword">
+          </div>
+          <div class="error-message" id="confirmNewPasswordRequired">This field is required</div>
+          <div class="error-message" id="confirmNewPasswordShort">Password must be at least 8 characters</div>
+          <div class="error-message" id="confirmNewPasswordMismatch">Passwords must match</div>
+        </div>
+        <button class="btn" id="updatePasswordBtn">Update Password</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="modal" id="successCard">
+      <div class="card">
+        <div class="success-icon">&#10003;</div>
+          <p class="success" id="successMessage">Success!</p>
+      </div>
+    </div>
+
+    <!-- ROLE SELECTION MODAL -->
+    <div class="modal" id="roleSelectModal">
+      <div class="card">
+        <h2>Log in as</h2>
+        <p>Select your role to continue</p>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+          <button class="btn role-btn" data-role="student">Student</button>
+          <button class="btn role-btn" data-role="officer">Officers</button>
+          <button class="btn role-btn" data-role="finance">Finance Committee</button>
+          <button class="btn role-btn" data-role="event">Event Coordinator</button>
+        </div>
+        <button class="back-link" id="backToLogin">Back</button>
+      </div>
+    </div>
+
+    <!-- OFFICER ROLE SELECTION MODAL -->
+    <div class="modal" id="officerRoleModal">
+      <div class="card">
+        <h2>Select Officer Role</h2>
+        <p>Choose your position to continue</p>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+          <button class="btn officer-role" data-officer="President">President</button>
+          <button class="btn officer-role" data-officer="Secretary">Secretary</button>
+          <button class="btn officer-role" data-officer="Treasurer">Treasurer</button>
+        </div>
+        <button class="back-link" id="backToMainRole">Back</button>
+      </div>
+    </div>
+
+    <script>
+      const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      // Show/Hide Cards
+      document.getElementById('showCreate').onclick=()=>{document.getElementById('loginCard').style.display='none';document.getElementById('createCard').style.display='block';};
+      document.getElementById('showLogin').onclick=()=>{document.getElementById('createCard').style.display='none';document.getElementById('loginCard').style.display='block';};
+      function showModal(id){document.getElementById(id).classList.add('active');}
+      function closeModal(id){document.getElementById(id).classList.remove('active');}
+
+      // OTP inputs
+      document.querySelectorAll('.otp-inputs').forEach(group=>{
+        const inputs=group.querySelectorAll('input');
+        inputs.forEach((input,i)=>{
+          input.addEventListener('input',()=>{
+            input.value=input.value.replace(/[^0-9]/g,'');
+            if(input.value && i<inputs.length-1) inputs[i+1].focus();
+          });
+          input.addEventListener('keydown', e=>{
+            if(e.key==='Backspace' && !input.value && i>0) inputs[i-1].focus();
+          });
+        });
+      });
+
+      // OTP countdown
+      let otpTime=60,otpTimer;
+      function startOtpCountdown(){
+        otpTime=60;
+        const el=document.getElementById('otpCountdown');
+        el.style.display='block';
+        el.textContent=`Resend in ${otpTime}s`;
+        clearInterval(otpTimer);
+        otpTimer=setInterval(()=>{
+          otpTime--;
+          if(otpTime>0) el.textContent=`Resend in ${otpTime}s`;
+          else{clearInterval(otpTimer);el.style.display='none';}
+        },1000);
+      }
+      document.getElementById('resendOtp').onclick=()=>{startOtpCountdown(); alert("Verification code resent!");};
+
+      // CREATE ACCOUNT
+      document.getElementById('createBtn').onclick = () => {
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('createEmail').value.trim();
+        const password = document.getElementById('createPassword').value.trim();
+        const confirm = document.getElementById('confirmPassword').value.trim();
+
+        // Required / Email validation
+        document.getElementById('fullNameError').style.display=!fullName?'block':'none';
+        document.getElementById('createEmailRequired').style.display=!email?'block':'none';
+        document.getElementById('createEmailInvalid').style.display=email && !emailRegex.test(email)?'block':'none';
+
+        // Password validation
+        document.getElementById('createPasswordRequired').style.display=!password?'block':'none';
+        document.getElementById('createPasswordShort').style.display=password && password.length<8?'block':'none';
+
+        document.getElementById('confirmPasswordRequired').style.display=!confirm?'block':'none';
+        document.getElementById('confirmPasswordShort').style.display=confirm && confirm.length<8?'block':'none';
+        document.getElementById('confirmPasswordMismatch').style.display=confirm && password!==confirm?'block':'none';
+
+        if(fullName && emailRegex.test(email) && password.length>=8 && confirm.length>=8 && password===confirm){
+          document.getElementById('successMessage').textContent="Your account has been created successfully!";
+          showModal('successCard');
+          setTimeout(()=>{
+            closeModal('successCard');
+            document.getElementById('createCard').style.display='none';
+            document.getElementById('loginCard').style.display='block';
+          },2500);
+        }
+      };
+
+      // LOGIN
+      document.getElementById('loginBtn').onclick=()=>{
+        const email=document.getElementById('loginEmail').value.trim();
+        const password=document.getElementById('loginPassword').value.trim();
+
+        document.getElementById('loginEmailRequired').style.display=!email?'block':'none';
+        document.getElementById('loginEmailInvalid').style.display=email && !emailRegex.test(email)?'block':'none';
+        document.getElementById('loginPasswordRequired').style.display=!password?'block':'none';
+        document.getElementById('loginPasswordShort').style.display=password && password.length<8?'block':'none';
+
+        if(email && emailRegex.test(email) && password.length>=8){
+          showModal('roleSelectModal');
+        }
+      };
+
+      // FORGOT PASSWORD
+      document.getElementById('sendForgotBtn').onclick=()=>{
+        const email=document.getElementById('forgotEmail').value.trim();
+        document.getElementById('forgotEmailRequired').style.display=!email?'block':'none';
+        document.getElementById('forgotEmailInvalid').style.display=email && !emailRegex.test(email)?'block':'none';
+        if(email && emailRegex.test(email)){
+          closeModal('forgotCard');
+          showModal('otpCard');
+          startOtpCountdown();
+        }
+      };
+
+      // OTP confirm → go to reset password
+      document.getElementById('otpConfirmBtn').onclick=()=>{
+        closeModal('otpCard');
+        showModal('resetCard');
+      };
+
+      // RESET PASSWORD
+      document.getElementById('updatePasswordBtn').onclick=()=>{
+        const newP=document.getElementById('newPassword').value.trim();
+        const confirmP=document.getElementById('confirmNewPassword').value.trim();
+
+        document.getElementById('newPasswordRequired').style.display=!newP?'block':'none';
+        document.getElementById('newPasswordShort').style.display=newP && newP.length<8?'block':'none';
+
+        document.getElementById('confirmNewPasswordRequired').style.display=!confirmP?'block':'none';
+        document.getElementById('confirmNewPasswordShort').style.display=confirmP && confirmP.length<8?'block':'none';
+        document.getElementById('confirmNewPasswordMismatch').style.display=confirmP && newP!==confirmP?'block':'none';
+
+        if(newP.length>=8 && confirmP.length>=8 && newP===confirmP){
+          closeModal('resetCard');
+          document.getElementById('successMessage').textContent="Your password has been updated successfully!";
+          showModal('successCard');
+          setTimeout(()=>{
+            closeModal('successCard');
+            document.getElementById('loginCard').style.display='block';
+          },2500);
+        }
+      };
+
+      // === ROLE SELECTION HANDLER ===
+      document.querySelectorAll('.role-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const role = btn.getAttribute('data-role');
+          closeModal('roleSelectModal');
+
+            if (role === 'officer') {
+              // show officer roles modal
+              showModal('officerRoleModal');
+            } else if (role === 'student') {
+              document.getElementById('successMessage').textContent = `Your account has been logged in successfully!`;
+              showModal('successCard');
+              setTimeout(() => {
+                closeModal('successCard');
+                window.location.href = "student-dashboard.html";
+              }, 2000);
+            } else if (role === 'finance') {
+              document.getElementById('successMessage').textContent = `Your account has been logged in successfully!`;
+              showModal('successCard');
+              setTimeout(() => {
+                closeModal('successCard');
+                window.location.href = "finance-committee-dashboard.html";
+              }, 2000);
+            } else if (role === 'event') {
+              document.getElementById('successMessage').textContent = `Your account has been logged in successfully!`;
+              showModal('successCard');
+              setTimeout(() => {
+                closeModal('successCard');
+                window.location.href = "campus-coordinator-dashboard.html";
+              }, 2000);
+            }
+        });
+      });
+
+      // === OFFICER ROLES HANDLER ===
+      document.querySelectorAll('.officer-role').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const officer = btn.getAttribute('data-officer');
+          closeModal('officerRoleModal');
+          document.getElementById('successMessage').textContent = `Your account has been logged in successfully!`;
+          showModal('successCard');
+            let dashboard = "";
+            if (officer === "President") {
+              dashboard = "president-dashboard.html";
+            } else if (officer === "Secretary") {
+              dashboard = "secretary-dashboard.html";
+            } else if (officer === "Treasurer") {
+              dashboard = "treasurer-dashboard.html";
+            }
+            setTimeout(() => {
+              closeModal('successCard');
+              if (dashboard) {
+                window.location.href = dashboard;
+              }
+            }, 2000);
+        });
+      });
+
+      // === BACK BUTTONS ===
+      document.getElementById('backToLogin').onclick = () => {
+        closeModal('roleSelectModal');
+        // go back to login form
+        document.getElementById('loginCard').style.display = 'block';
+      };
+
+      document.getElementById('backToMainRole').onclick = () => {
+        closeModal('officerRoleModal');
+        showModal('roleSelectModal');
+      };
+    </script>
+  </body>
+</html>
