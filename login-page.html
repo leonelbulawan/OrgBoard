@@ -300,6 +300,15 @@
         box-sizing:border-box;
       }
 
+      /* Avatar upload preview styling */
+      .avatar-preview{
+        width:120px;height:120px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 12px;background:#f5f5f5;
+        /* match profile button border style */
+        border: 2px solid #00ffb3;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      }
+      .upload-actions{display:flex;gap:10px;justify-content:center;margin-top:12px}
+
       .success-icon{
         display:flex;
         justify-content:center;
@@ -605,6 +614,25 @@
       </div>
     </div>
 
+    <!-- Upload Avatar Modal (optional) -->
+    <div class="modal" id="uploadAvatarModal">
+      <div class="card">
+        <h2>Upload Avatar</h2>
+        <p>You can upload a profile picture now, or skip and do it later.</p>
+        <!-- preview shown after choosing a file -->
+        <img id="avatarPreview" class="avatar-preview" alt="avatar preview" style="display:none;" />
+        <!-- hidden file input; Upload button will open the picker -->
+        <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+        <div class="upload-actions" style="flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:10px;justify-content:center;">
+            <button class="btn" id="uploadAvatarBtn">Upload</button>
+            <button class="btn" id="saveAvatarBtn" style="display:none;">Save</button>
+          </div>
+          <button class="back-link" id="skipAvatarBtn">Skip</button>
+        </div>
+      </div>
+    </div>
+
     <div class="modal" id="roleSelectModal">
       <div class="card">
         <h2>Log in as</h2>
@@ -689,10 +717,11 @@
           document.getElementById('successMessage').textContent="Your account has been created successfully!";
           showModal('successCard');
           setTimeout(()=>{
+            // close success, hide create form and show optional avatar upload modal
             closeModal('successCard');
             document.getElementById('createCard').style.display='none';
-            document.getElementById('loginCard').style.display='block';
-          },2500);
+            showModal('uploadAvatarModal');
+          },1500);
         }
       };
 
@@ -710,6 +739,98 @@
         // initialize visibility
         if (createRoleSelect.value === 'Officer') officerSelectGroup.style.display = 'block';
         else officerSelectGroup.style.display = 'none';
+      }
+
+      // Avatar upload modal handlers: Upload opens picker, Save appears after selection
+      const avatarInput = document.getElementById('avatarInput');
+      const uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
+      const saveAvatarBtn = document.getElementById('saveAvatarBtn');
+      const skipAvatarBtn = document.getElementById('skipAvatarBtn');
+
+      if (uploadAvatarBtn && avatarInput) {
+        // Clicking Upload opens the file picker
+        uploadAvatarBtn.addEventListener('click', () => {
+          avatarInput.click();
+        });
+
+        // When a file is chosen, hide Upload and show Save and preview image
+        const avatarPreviewImg = document.getElementById('avatarPreview');
+        avatarInput.addEventListener('change', () => {
+          if (avatarInput.files && avatarInput.files[0]) {
+            uploadAvatarBtn.style.display = 'none';
+            if (saveAvatarBtn) saveAvatarBtn.style.display = 'inline-block';
+            if (avatarPreviewImg) {
+              avatarPreviewImg.src = URL.createObjectURL(avatarInput.files[0]);
+              avatarPreviewImg.style.display = 'block';
+            }
+          }
+        });
+      }
+
+      if (saveAvatarBtn) {
+        saveAvatarBtn.addEventListener('click', () => {
+          // Simulate upload: show success modal briefly then go to login
+          document.getElementById('successMessage').textContent = 'Avatar uploaded successfully!';
+          closeModal('uploadAvatarModal');
+          showModal('successCard');
+          setTimeout(() => {
+            closeModal('successCard');
+            // reset buttons for next time
+            saveAvatarBtn.style.display = 'none';
+            if (uploadAvatarBtn) uploadAvatarBtn.style.display = 'inline-block';
+            if (avatarInput) avatarInput.value = '';
+            const avatarPreviewImg = document.getElementById('avatarPreview');
+            if (avatarPreviewImg) { avatarPreviewImg.style.display = 'none'; avatarPreviewImg.src = ''; }
+            // Redirect to dashboard based on selected role
+            const role = (document.getElementById('createRole')||{}).value || '';
+            const officer = (document.getElementById('createOfficer')||{}).value || '';
+            redirectToDashboard(role, officer);
+          }, 1500);
+        });
+      }
+
+      if (skipAvatarBtn) {
+        skipAvatarBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          closeModal('uploadAvatarModal');
+          // reset input and buttons
+          if (avatarInput) avatarInput.value = '';
+          if (saveAvatarBtn) saveAvatarBtn.style.display = 'none';
+          if (uploadAvatarBtn) uploadAvatarBtn.style.display = 'inline-block';
+          const avatarPreviewImg = document.getElementById('avatarPreview');
+          if (avatarPreviewImg) { avatarPreviewImg.style.display = 'none'; avatarPreviewImg.src = ''; }
+          // Immediately redirect to dashboard based on selected role
+          const role = (document.getElementById('createRole')||{}).value || '';
+          const officer = (document.getElementById('createOfficer')||{}).value || '';
+          redirectToDashboard(role, officer);
+        });
+      }
+
+      // Helper to redirect user to the appropriate dashboard after signup/login
+      function redirectToDashboard(role, officer) {
+        const r = (role || '').toLowerCase();
+        if (r === 'officer' || r === 'officers') {
+          const off = (officer || '').toLowerCase();
+          if (off === 'president') window.location.href = 'president-dashboard.html';
+          else if (off === 'secretary') window.location.href = 'secretary-dashboard.html';
+          else if (off === 'treasurer') window.location.href = 'treasurer-dashboard.html';
+          else window.location.href = 'president-dashboard.html';
+          return;
+        }
+        if (r === 'student') {
+          window.location.href = 'student-dashboard.html';
+          return;
+        }
+        if (r === 'finance' || r === 'finance committee') {
+          window.location.href = 'finance-committee-dashboard.html';
+          return;
+        }
+        if (r === 'event' || r === 'event coordinator') {
+          window.location.href = 'campus-coordinator-dashboard.html';
+          return;
+        }
+        // Default fallback
+        window.location.href = 'student-dashboard.html';
       }
 
       document.getElementById('loginBtn').onclick=()=>{
