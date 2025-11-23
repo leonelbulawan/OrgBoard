@@ -242,6 +242,32 @@
         outline:none;
       }
 
+      /* OrgBoard-style dropdown (reused from president filters) */
+      .org-dropdown {
+        width:100%;
+        height:42px;
+        border:2px solid #ccc;
+        border-radius:6px;
+        padding:0 3rem 0 1rem;
+        font-size:0.95rem;
+        font-weight:500;
+        color:#000;
+        background-color:#ffffff;
+        appearance:none;
+        cursor:pointer;
+        background-image: url("data:image/svg+xml,%3Csvg fill='%232b6758' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 18px;
+        transition: box-shadow 0.25s, border-color 0.25s;
+      }
+
+      .org-dropdown:focus{
+        outline: none;
+        border-color:#2b6758;
+        box-shadow:0 0 4px rgba(43,103,88,0.4);
+      }
+
      .modal{
         position:fixed;
         top:0;
@@ -487,6 +513,28 @@
             <div class="error-message" id="confirmPasswordShort">Password must be at least 8 characters</div>
             <div class="error-message" id="confirmPasswordMismatch">Passwords must match</div>
           </div>
+          <div class="form-group">
+            <label for="createRole">Select Role</label>
+            <select id="createRole" class="org-dropdown">
+              <option value="">-- Select Role --</option>
+              <option value="Student">Student</option>
+              <option value="Officer">Officer</option>
+              <option value="Finance">Finance Committee</option>
+              <option value="Event">Event Coordinator</option>
+            </select>
+            <div class="error-message" id="createRoleError">This field is required</div>
+          </div>
+
+          <div class="form-group" id="officerSelectGroup" style="display:none;">
+            <label for="createOfficer">Select Officer Role</label>
+            <select id="createOfficer" class="org-dropdown">
+              <option value="">-- Select Officer Role --</option>
+              <option value="President">President</option>
+              <option value="Secretary">Secretary</option>
+              <option value="Treasurer">Treasurer</option>
+            </select>
+            <div class="error-message" id="createOfficerError">This field is required when role is Officer</div>
+          </div>
           <button class="btn" id="createBtn">Create Account</button>
           <p>Already have an account? <a href="#" class="simple-link" id="showLogin">Log In</a></p>
         </div>
@@ -647,6 +695,22 @@
           },2500);
         }
       };
+
+      // Toggle officer select visibility when Role is 'Officer'
+      const createRoleSelect = document.getElementById('createRole');
+      const officerSelectGroup = document.getElementById('officerSelectGroup');
+      if (createRoleSelect && officerSelectGroup) {
+        createRoleSelect.addEventListener('change', () => {
+          if (createRoleSelect.value === 'Officer') {
+            officerSelectGroup.style.display = 'block';
+          } else {
+            officerSelectGroup.style.display = 'none';
+          }
+        });
+        // initialize visibility
+        if (createRoleSelect.value === 'Officer') officerSelectGroup.style.display = 'block';
+        else officerSelectGroup.style.display = 'none';
+      }
 
       document.getElementById('loginBtn').onclick=()=>{
         const email=document.getElementById('loginEmail').value.trim();
