@@ -1,0 +1,95 @@
+/* Apply Poppins font to the whole site */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+/* Active nav link highlighting */
+nav a.active {
+    color: #00ffb3;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* Remember checkbox: change checked color to match brand and remove shadows */
+.remember-forgot input[type="checkbox"] {
+    /* Primary: modern browsers respect accent-color */
+    accent-color: #2b6758;
+    /* Remove any default shadow/outline when rendered by CSS-aware browsers */
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    outline: none;
+}
+
+/* Remove focus outline/shadow while keeping a visible border color for accessibility */
+.remember-forgot input[type="checkbox"]:focus,
+.remember-forgot input[type="checkbox"]:focus-visible {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    outline: none;
+    border-color: #2b6758;
+}
+
+/* Fallback visuals for browsers that don't support accent-color.
+   These rules try to reinforce the checked appearance; native
+   checkboxes may still be OS-rendered and not fully styleable. */
+.remember-forgot input[type="checkbox"]:checked {
+    background-color: #2b6758;
+    border-color: #2b6758;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+/* Upload Report (Secretary) checkbox: match brand color and remove shadows */
+.ur-checkbox input[type="checkbox"],
+#ur-approved {
+    accent-color: #2b6758;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    outline: none;
+}
+
+.ur-checkbox input[type="checkbox"]:focus,
+#ur-approved:focus,
+.ur-checkbox input[type="checkbox"]:focus-visible,
+#ur-approved:focus-visible {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    outline: none;
+    border-color: #2b6758;
+}
+
+.ur-checkbox input[type="checkbox"]:checked,
+#ur-approved:checked {
+    background-color: #2b6758;
+    border-color: #2b6758;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+/* Make mobile nav hover/active match desktop nav styles
+   Use !important to override inline page styles so behavior is consistent */
+.mobile-nav a:hover,
+.mobile-nav a.active {
+    background: transparent !important;
+    color: #00ffb3 !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+}
+
+.mobile-nav a:hover { cursor: pointer; }
+
+/* Responsive wrapper for wide tables: allows horizontal scrolling on small screens
+   without changing table column widths. */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+    width: 100%;
+    /* prevent the table from shrinking to fit small containers */
+    min-width: 600px; /* keeps columns from collapsing; adjust if needed */
+}

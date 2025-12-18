@@ -1,0 +1,3335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Treasurer - OrgBoard</title>
+    <link rel="icon" href="assets/img/logo.jpg" type="image/jpeg">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+      <link rel="stylesheet" href="assets/css/main.css">
+      <style>
+        /* ==== GLOBAL STYLE ==== */
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { background: linear-gradient(180deg, #ecfdf5 0%, #f6f9f8 100%); color: #333; min-height: 100vh; display: flex; flex-direction: column; }
+
+          /* Prevent desktop zoom-out shrinking: keep a sensible min-width so
+            the dashboard shows a horizontal scrollbar instead of scaling
+            down UI elements. */
+          @media (min-width: 900px) { body { min-width: 900px; } }
+
+      /* ==== HEADER ==== */
+      header { background-color: #2b6758; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); position: sticky; top: 0; z-index: 10; }
+      header .logo { display: flex; align-items: center; }
+      .orgboard-logo { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 10px; animation: pulseGlow 2s infinite; box-shadow: 0 0 8px #00ffb3; }
+
+      @keyframes pulseGlow {
+        0% { box-shadow: 0 0 6px #00ffb3; }
+        50% { box-shadow: 0 0 18px #00ffb3; }
+        100% { box-shadow: 0 0 6px #00ffb3; }
+      }
+      header h1 { font-size: 1.35rem; font-weight: 600; }
+      header p { font-size: 0.8rem; color: white; }
+      header .icons { display: flex; align-items: center; gap: 15px; font-size: 1.4rem; }
+      .profile-icon { width: 38px; height: 38px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center; color: #2b6758; font-weight: 700; font-size: 1rem; cursor: pointer; }
+
+      /* ==== NAV ==== */
+      nav { background-color: #265c4f; color: white; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; padding: 0.6rem 1rem; }
+      nav a { margin: 5px 12px; text-decoration: none; color: white; font-weight: 500; transition: color 0.3s; }
+      nav a:hover { color: #11D58F; }
+      nav span { margin-left: auto; font-weight: 600; font-size: 0.9rem; }
+
+      .welcome-back{
+        margin-right: 15px;
+      }
+
+      /* ==== DASHBOARD ==== */
+      .dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; width: calc(100% - 4rem); margin: 2rem; align-items: start; }
+      .card { border-radius: 15px; text-align: center; padding: 1.5rem; font-weight: 600; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12); transition: transform 0.25s ease, box-shadow 0.25s ease; min-width: 0; box-sizing: border-box; }
+      .card:hover { transform: translateY(-5px);}
+      .green-card, .blue-card, .yellow-card, .red-card { 
+        background-color: white; 
+        color: black;
+      }
+
+      .heading {
+        color: #265c4f;
+      }
+
+      .card p:first-child { font-size: 1.8rem; font-weight: bold; }
+      .card p:nth-child(2) { font-size: 0.95rem; }
+
+
+      /* ==== MAIN GRID ==== */
+      .main-grid { display: grid; grid-template-columns: 1fr; gap: 1.2rem; padding: 0 2rem 2rem; }
+      @media (min-width: 992px) { .main-grid { grid-template-columns: 1fr 1fr; } }
+
+      .box { background: white; border-radius: 15px; padding: 1.5rem; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); position: relative; }
+      .box h2 { font-weight: 600; margin-bottom: 1.5rem; font-size: 1rem; color: #2b6758; }
+      
+      
+      .dashboard-view-btn {
+        position: absolute;
+        top: 20px;
+        right: 24px;
+        background-color: #2b6758;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 18px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        transition: background 0.3s ease, transform 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+      }
+
+      .dashboard-view-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .dashboard-view-btn:active {
+        transform: translateY(0);
+      }
+
+      /* ==== EVENT ITEMS ==== */
+      a.event-item, a.notif-item {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 0.9rem;
+        margin-bottom: 0.6rem;
+        background-color: #f9fafb;
+        transition: background 0.3s, transform 0.2s;
+      }
+      
+      a.event-item:hover, a.notif-item:hover, .event-card:hover {
+        background-color: #ecfdf5;
+        transform: scale(1.01);
+      }
+
+      .event-card h4 { font-weight: 600; margin-bottom: 0.3rem; }
+      .event-card p { font-size: 0.9rem; margin-bottom: 0.3rem; color: #333; }
+
+      /* Green plain text for status */
+      .event-details {
+        font-style: normal;
+        font-weight: 600;
+        color: #166534;
+        background: none;
+        padding: 0;
+        border: none;
+        font-size: 0.85rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .status {
+        color: #854d0e;
+        font-style: normal;
+        font-weight: 600;
+        background: none;
+        padding: 0;
+        border: none;
+        font-size: 0.85rem;
+      }
+
+      /* ==== EVENT CARD (MODAL) ==== */
+      .event-card {
+        position: relative;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 0.8rem;
+        background-color: #f9fafb;
+      }
+
+      .event-card .event-status {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        color: #166534;
+        font-size: 0.9rem;
+      }
+
+      .event-status-1 {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        color: #14532d;
+        font-size: 0.9rem;
+      }
+
+      .event-status-2 {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        color: #854d0e;
+        font-size: 0.9rem;
+      }
+
+      .event-status-3 {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        color: #1e3a8a;
+        font-size: 0.9rem;
+      }
+
+
+      .event-card .view-details {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background-color: #2b6758;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+
+      .view-details:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .view-details:active {
+        transform: translateY(0);
+      }
+
+      /* Global fixes to avoid horizontal overflow and allow children to shrink */
+      .event-details button { margin-left: 8px; }
+      img { max-width: 100%; height: auto; display: block; }
+      .dashboard-cards > *, .main-grid > *, .box, header, nav, .modal, .es-modal-wide, .details-content { min-width: 0; box-sizing: border-box; }
+      html, body { max-width: 100%; overflow-x: hidden; }
+
+
+      /* ==== TABLE ==== */
+      table { width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+      thead { background-color: #2b6758; color: white; }
+      th, td { padding: 0.8rem; text-align: center; }
+
+      tbody tr:hover { background-color: #ecfdf5; }
+      .status-pending { color:#854d0e; font-weight: 600; }
+      .status-approved { color:#1e3a8a; font-weight: 600; }
+      .status-rejected {color:#FF0000; font-weight: 600;}
+
+      footer { text-align: center; font-size: 0.8rem; color: #666; margin: 1.5rem 0; }
+
+      /* ==== MODAL ==== */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.45);
+        justify-content: center;
+        align-items: center;
+        z-index: 50;
+        backdrop-filter: blur(6px);
+      }
+
+      .modal {
+        background: #ffffff;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 900px;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        position: relative;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .modal-header {
+        background: #2b6758;
+        color: white;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .modal-header input {
+        border: none;
+        background: white;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        width: 70%;
+        font-size: 0.9rem;
+        outline: none;
+      }
+
+      .modal-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        padding: 1.8rem;
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+
+      .refresh-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: white;
+        transition: transform 0.3s, color 0.3s;
+      }
+
+      .refresh-btn:hover {
+        color: #11D58F;
+        transform: rotate(90deg);
+      }
+
+      @keyframes refreshMove {
+        0% { transform: translateY(0); opacity: 1; }
+        25% { transform: translateY(-10px); opacity: 0.8; }
+        50% { transform: translateY(10px); opacity: 0.9; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+
+      .event-card.refresh-anim {
+        animation: refreshMove 0.6s ease;
+      }
+
+
+      .modal-content::-webkit-scrollbar { width: 6px; }
+      .modal-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+      .modal-content h3 {
+        color: #2b6758;
+        margin-bottom: 1rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 0.4rem;
+      }
+
+      .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        color: white;
+        transition: color 0.3s;
+      }
+      .close-modal:hover { color: #11D58F; }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      /* Success modal (login modal copy) */
+      .success-modal{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.25s ease;z-index:1000}
+      .success-modal.active{opacity:1;pointer-events:auto}
+      .success-modal .card{position:relative;max-width:400px;padding:60px;border-radius:15px;text-align:center;background:#ffffff;color:#333;box-shadow:0 10px 25px rgba(0,0,0,0.25);z-index:1100}
+      .success-icon{display:flex;justify-content:center;align-items:center;width:100px;height:100px;margin:0 auto 20px;border-radius:50%;background-color:#2b6758;color:#fff;font-size:64px;line-height:1;font-weight:700}
+      .success-modal .success-text{font-size:1.05rem;color:#333;margin-top:6px;display:block}
+      .success-modal .card { background: #fff !important; }
+      .success-modal .card p { color: #333 !important; font-weight:400 !important; }
+      .success-modal.active .card{animation:floatIn 0.28s ease}
+      @keyframes floatIn{0%{transform:translateY(-10px);opacity:0}100%{transform:translateY(0);opacity:1}}
+
+      @media (max-width: 768px) {
+        .modal-content { grid-template-columns: 1fr; max-height: 75vh; }
+        .modal-header input { width: 85%; }
+      }
+
+      /* ==== FLOATING EVENT DETAILS CARD ==== */
+    .details-float {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(43, 103, 88, 0.25);
+        backdrop-filter: blur(6px);
+        justify-content: center;
+        align-items: center;
+        z-index: 120;
+        animation: fadeIn 0.25s ease;
+      }
+
+      .details-content {
+        background: #ffffff;
+        border-radius: 15px;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      animation: scaleUp 0.3s ease;
+      }
+
+      .details-header {
+        background: #2b6758;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+      }
+
+      .details-header h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .details-body {
+        padding: 1.5rem 2rem;
+      }
+
+    .details-body p {
+      font-size: 0.95rem;
+      color: #333;
+      margin: 0.6rem 0;
+      }
+
+      .details-body strong {
+        color: #265c4f;
+      }
+
+      /* === FINANCIAL REPORT SECTION === */
+      #financialReportSection {
+        font-family: "Poppins", sans-serif;
+        background-color: #f8fdfb;
+        padding: 2rem;
+      }
+
+      /* 🔹 Filter Container */
+      .filter-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        width: 100%;
+      margin-bottom: 1.5rem;
+      }
+
+      /* 🔍 First Row (Search) */
+      .search-row input {
+        width: 100%;
+        height: 42px;
+        border: 1px solid #d0ddd8;
+        border-radius: 10px;
+        padding: 0 1rem;
+        font-size: 0.95rem;
+        background-color: #fff;
+        transition: 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+
+      .search-row input:focus {
+        outline: none;
+        border-color: #2b6758;
+        box-shadow: 0 0 4px rgba(43, 103, 88, 0.4);
+      }
+
+      /* 🎛 Second Row (Dropdowns) */
+      .dropdown-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+      }
+
+      /* ==== ORGBOARD CONSISTENT DROPDOWN ==== */
+      .dropdown-row select {
+        flex: 1;
+        height: 42px;
+        border: 1px solid #d0ddd8;
+        border-radius: 10px; /* ✅ matches OrgBoard cards */
+        padding: 0 3rem 0 1rem; /* ✅ consistent spacing */
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: black;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* ✅ same depth as cards */
+        transition: all 0.25s ease;
+        appearance: none;
+        cursor: pointer;
+
+        /* ✅ Consistent green dropdown arrow */
+        background-image: url("data:image/svg+xml,%3Csvg fill='%232b6758' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1.5rem center; /* ✅ properly spaced arrow */
+        background-size: 18px;
+      }
+
+      .dropdown-row select:focus {
+        outline: none;
+        border-color: #2b6758;
+        box-shadow: 0 0 4px rgba(43, 103, 88, 0.4);
+      }
+
+      tbody tr td {
+        border: 1px solid #ccc;/* default border */
+      }
+
+
+      /* 📱 Responsive */
+      @media (max-width: 992px) {
+        .dropdown-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+
+      /* OrgBoard-style button */
+      .orgboard-btn {
+        background-color: #2b6758; /* OrgBoard green */
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 16px 18px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 34px; /* consistent button height for centering */
+        min-width: 70px;
+      }
+
+      /* Hover & Active states */
+      .orgboard-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      }
+
+      .orgboard-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+      }
+
+
+      /* === OrgBoard-style Search Bar === */
+      .search-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .search-wrapper input {
+        flex: 1;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+
+      .search-wrapper input:focus {
+        border-color: #2b6758;
+        box-shadow: 0 0 5px rgba(43, 103, 88, 0.3);
+        outline: none;
+      }
+
+      /* === Search Button === */
+      .search-btn {
+        background-color: #2b6758; /* OrgBoard green */
+        border: none;
+        padding: 12px 14px;
+        border-radius: 7px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+      }
+
+      .search-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .search-btn:active {
+        transform: translateY(0);
+      }
+
+      /* === Search Icon inside button === */
+      .search-icon {
+        width: 18px;
+        height: 18px;
+        color: white;
+        stroke: white;
+      }
+
+      /* ====== PROGRESS TRACKING TABLE ====== */
+      .progress-wrapper {
+        width: calc(100% - 4rem); /* align with page padding */
+        margin: 40px 2rem;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        padding: 20px;
+        font-family: 'Poppins', sans-serif;
+      }
+
+ 
+      .finance-table td {
+        padding: 14px 18px;
+        text-align: center;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .finance-table th {
+        font-weight: 600;
+      }
+
+      .financial-view-btn {
+        background-color: #2b6758;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 18px;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: 0.2s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+        margin-left: 12px;
+      }
+
+      .financial-view-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+
+      }
+
+      .financial-view-btn:active {
+        transform: translateY(0);
+      }
+
+      .action-cell {
+        display: flex;
+        flex-direction: column; /* stack vertically */
+        align-items: center;    /* center horizontally */
+        gap: 8px;               /* spacing between View and Edit */
+      }
+
+      /* ====== PROGRESS BAR ====== */
+      .progress-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: center;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background-color: #009c63;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+      }
+
+      .progress-percent {
+        font-size: 14px;
+        color: #333;
+      }
+
+      /* ====== STATUS BUTTON ====== */
+      .center-btn {
+        display: flex;
+        flex-direction: column; /* ✅ ilalagay silang isa sa ibabaw ng isa */
+        align-items: center;
+        gap: 10px; /* ✅ vertical space sa pagitan ng View at Report buttons */
+      }
+
+      .report-btn {
+        background-color: #2b6758; /* OrgBoard green */
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 18px 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 34px; /* consistent button height for centering */
+        min-width: 70px;
+      }
+
+      .report-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .report-btn:active {
+        transform: translateY(0);
+      }
+
+      .table-card {
+        width: 100%;
+        margin: 40px auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        padding: 20px;
+        font-family: 'Poppins', sans-serif;
+        overflow-x: auto; /* allow horizontal scroll on small screens */
+        -webkit-overflow-scrolling: touch;
+        /* keep table content contained and avoid causing page-wide overflow */
+      }
+
+      /* Ensure finance tables can be wider than the viewport but stay contained
+         inside the scrollable card on smaller screens. */
+      .finance-table {
+        min-width: 720px;
+        border-collapse: collapse;
+      }
+
+      .table-btn {
+        background-color: #2b6758; /* OrgBoard green */
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 16px 18px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 34px; /* consistent button height for centering */
+        min-width: 70px;
+      }
+
+      .table-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .table-btn:active {
+        transform: translateY(0);
+      }
+
+      /* ==== PROFILE DROPDOWN MENU ==== */
+      .profile-dropdown {
+        position: absolute;
+        top: 50px;
+        right: 5px;
+        background: #ffffff;
+        width: 270px;
+        padding: 10px 0;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        display: none;
+        flex-direction: column;
+        z-index: 1000;
+        font-family: 'Poppins', sans-serif;
+        animation: fadeIn 0.2s ease;
+        min-width: 230px;
+      }
+
+      .profile-dropdown.show {
+        display: flex;
+      }
+
+      /* ===== NOTIFICATION BUTTON & DROPDOWN ===== */
+      /* Make notification bell match profile button size & style */
+      .notif-btn {
+        background-color: #1f5d50; /* same as profile-btn */
+        color: white;
+        border: 2px solid #00ffb3; /* accent border like profile */
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        transition: background 0.25s ease, transform 0.12s ease;
+      }
+
+      .notif-btn:hover { background-color: #00ffb3; transform: translateY(-2px); }
+      .notif-btn:active { transform: translateY(0); }
+
+      .notif-btn svg { width: 18px; height: 18px; color: white; stroke: currentColor; }
+
+      .notif-badge {
+        background: #ff3b3b;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 2px 6px;
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      }
+
+      /* Make notif dropdown match the system/profile dropdown layout */
+      .notif-dropdown {
+        position: absolute;
+        right: 0;
+        top: 48px; /* align under header buttons */
+        width: 280px; /* similar to profile dropdown */
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        z-index: 1200;
+        padding: 8px;
+        display: none;
+        font-family: 'Poppins', sans-serif;
+        animation: fadeIn 0.18s ease;
+      }
+
+      .notif-dropdown .notif-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-bottom: 1px solid #e6e6e6;
+      }
+
+      .notif-dropdown .notif-list {
+        max-height: 260px;
+        overflow-y: auto;
+        padding: 8px 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .notif-dropdown .notif-entry {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #111;
+        background: #f9fafb;
+        transition: background 0.16s, transform 0.12s;
+      }
+
+      .notif-dropdown .notif-entry:hover {
+        background: #f0fbf6;
+        transform: translateY(-2px);
+      }
+
+      .notif-entry .notif-body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .notif-message {
+        font-weight: 600;
+        color: #1f1f1f;
+        font-size: 0.95rem;
+      }
+
+      .notif-time {
+        font-size: 0.78rem;
+        color: #7a7a7a;
+        margin-top: 2px;
+      }
+
+      /* unread item highlight (no left accent) */
+      .notif-entry.unread {
+        background: #e8fff5;
+      }
+
+      .notif-header strong { font-size: 0.98rem; color: #133; }
+
+      .profile-header {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #e6e6e6;
+      }
+
+      .profile-header img {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        margin-right: 10px;
+        border: 2px solid #2b6758;
+      }
+
+      .profile-header .info p {
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      .profile-header .info .name {
+        font-weight: 600;
+        color: #2b6758;
+      }
+
+      .profile-header .info .role {
+        font-size: 0.85rem;
+        color: #777;
+      }
+
+      .dropdown-divider {
+        height: 1px;
+        background: #e6e6e6;
+        margin: 5px 0;
+      }
+
+      .menu-item {
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        color: #333;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .menu-item:hover {
+        background: #f5f8f6;
+      }
+
+      .menu-item i {
+        margin-right: 10px;
+        color: #2b6758;
+        width: 20px;
+      }
+
+
+      /* ==== PROFILE DROPDOWN ==== */
+      .profile-container {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+      }
+
+      .profile-btn {
+        background-color: #1f5d50;
+        color: white;
+        font-weight: 600;
+        border: 2px solid #00ffb3; /* Accent green border for profile icon */
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.22s ease, box-shadow 0.18s ease, transform 0.12s ease;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0; /* prevent baseline shift when replacing icon with img */
+      }
+
+      /* hover should mirror orgboard button behaviour */
+      .profile-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+      .profile-btn:active { transform: translateY(0); }
+
+      .profile-btn .profile-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .profile-dropdown hr {
+        border: 0;
+        height: 1px;
+        background-color: #e0e0e0;
+        margin: 8px 0;
+      }
+
+      /* User info */
+      .profile-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+      }
+
+      .profile-avatar {
+        background-color: #2b6758;
+        color: white;
+        font-weight: 600;
+        border-radius: 50%;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .profile-text {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .profile-name {
+        font-weight: 600;
+        color: #1f1f1f;
+        font-size: 15px;
+      }
+
+      .profile-role {
+        font-size: 13px;
+        color: #6b7b75;
+        font-weight: 500;
+        margin-top: 2px;
+      }
+
+      /* Menu items */
+      .profile-menu {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .profile-menu li {
+        padding: 10px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #2b2b2b;
+        font-size: 14px;
+        transition: background 0.2s ease;
+      }
+
+      .profile-menu li:hover {
+        background-color: #f0f8f5;
+      }
+
+      /* ===== MODAL OVERLAY ===== */
+      .bd-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(43, 103, 88, 0.25);
+        backdrop-filter: blur(6px);
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        animation: fadeIn 0.25s ease;
+      }
+
+      /* ===== MODAL BOX ===== */
+      .bd-modal-box {
+        background: #ffffff;
+        width: 90%;
+        max-width: 480px;
+        border-radius: 15px;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        animation: scaleUp 0.3s ease;
+      }
+
+      /* ===== HEADER (green same as image) ===== */
+      .bd-modal-header {
+        background: #1F5E4C;
+        color: white;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .bd-modality h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .bd-modality {
+        padding: 1.5rem 2rem;
+      }
+
+      .bd-modality p {
+        font-size: 0.95rem;
+        color: #333;
+        margin: 0.6rem 0;
+      }
+
+      .bd-modality strong {
+        color: #265c4f;
+        font-weight: 600;
+      }
+
+      .bd-close-btn {
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        color: white;
+        transition: color 0.3s;
+      }
+      
+      .bd-close-btn:hover { 
+        color: #11D58F; 
+      }
+
+      /* Overlay */
+      .sr-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        backdrop-filter: blur(6px);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        background: rgba(0,0,0,0.45);
+      }
+
+      /* Modal size matched to Budget Check */
+      .sr-modal-box {
+        width: 90%;
+        max-width: 900px;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        animation: fadeIn 0.3s ease;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Header */
+      .sr-header {
+        background-color: #1f5f4e;
+        color: white;
+        padding: 18px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .sr-header h2 {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .sr-close {
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        color: white;
+        transition: color 0.3;
+      }
+
+      .sr-close:hover {
+        color: #11D58F; 
+      }
+
+      .sr-body {
+        padding: 25px;
+      }
+
+      .sr-body label {
+        font-weight: 600;
+        display: block;
+        margin-top: 14px;
+      }
+
+      /* Inputs */
+      #sr-recipient, #sr-subject, #sr-message {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #bbbbbb;
+        outline: none;
+        margin-top: 5px;
+        font-size: 15px;
+      }
+
+      #sr-recipient:focus,
+      #sr-subject:focus,
+      #sr-message:focus {
+        border-color: #2b6758;
+        box-shadow: 0 0 5px rgba(43, 103, 88, 0.3);
+        outline: none;
+      }
+
+      #sr-message {
+        resize: none;
+      }
+
+      /* LOGIN-style error messages */
+      .sr-error {
+        color: #e74c3c;
+        font-size: 13px;
+        margin-top: 4px;
+        margin-bottom: 0;
+        display: none;
+        font-weight: 500;
+      }
+
+      /* Character limit message (hidden until user types) */
+      .sr-limit {
+        display: none;
+        font-size: 13px;
+        color: #666;
+        margin-top: 4px;
+      }
+      .es-count {
+        display: none;
+        font-size: 13px;
+        color: #666;
+        margin-top: 6px;
+      }
+
+      /* Send Button (OrgBoard green) */
+      .sr-send-btn {
+        width: 100%;
+        background: #2b6758;
+        color: white;
+        font-weight: 600;
+        border: none;
+        border-radius: 7px;
+        padding: 12px 0;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .sr-send-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .sr-send-btn:active {
+        transform: translateY(0);
+      }
+
+      /* Animation */
+      @keyframes fadeIn {
+        from { 
+          transform: scale(0.9); opacity: 0; 
+        }
+
+        to { 
+          transform: scale(1); opacity: 1; 
+        }
+      }
+
+      /* Overlay */
+      .es-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        backdrop-filter: blur(6px);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        background: rgba(0,0,0,0.45);
+      }
+
+      /* Modal Size (same as Send Reminder) */
+      .es-modal-wide {
+        width: 760px;
+        background: #ffffff;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        animation: esPop 0.25s ease;
+      }
+
+      .es-modal-wide {
+        width: 90%;
+        max-width: 900px;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        animation: fadeIn 0.3s ease;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Header */
+      .es-header {
+        background-color: #1f5f4e;
+        color: white;
+        padding: 18px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .es-header h2 {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .es-close-btn {
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        color: white;
+        transition: color 0.3;
+      }
+
+      .es-close-btn:hover {
+        color: #11D58F; 
+      }
+
+      /* Body */
+      .es-body {
+        padding: 25px 30px;
+      }
+
+      .es-label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        display: block;
+        margin-top: 15px;
+      }
+
+      /* Inputs match Send Reminder */
+      .select.es-input {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #bbbbbb;
+        outline: none;
+        margin-top: 5px;
+        font-size: 15px;
+      }
+
+      .es-input {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #bbbbbb;
+        outline: none;
+        margin-top: 5px;
+        font-size: 15px;
+
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+
+        background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6l4 4 4-4' fill='%23215c4f' /%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 22px center; /* adjust spacing */
+        background-size: 14px;
+
+        padding-right: 50px; /* space for arrow */
+      }
+
+      .es-input:focus, .es-textarea:focus {
+        border-color: #2b6758;
+        box-shadow: 0 0 5px rgba(43, 103, 88, 0.3);
+        outline: none;
+      }
+
+      .es-textarea {
+        width: 100%;
+        height: 110px;
+        padding: 12px;
+        border: 1px solid #cfcfcf;
+        border-radius: 6px;
+        font-size: 15px;
+        resize: none;
+      }
+
+      /* Radio buttons */
+      .es-radio-group {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 8px;
+      }
+
+      .es-radio-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* Checkboxes */
+      .es-check-group {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      /* Error text */
+      .es-err {
+        color: #e74c3c;
+        font-size: 13px;
+        height: 14px;
+        margin-top: 4px;
+        font-weight: 500;
+      }
+
+      /* Full-width button like Send Reminder */
+      .es-save-wide {
+        width: 100%;
+        background: #2b6758;
+        color: white;
+        font-weight: 600;
+        border: none;
+        border-radius: 7px;
+        padding: 12px 0;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+
+      .es-save-wide:hover {
+        background-color:#00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .es-save-wide:active {
+        transform: translateY(0);
+      }
+
+      /* When add-expense inputs contain text apply focus-like styles */
+      #addExpenseModalOverlay input.es-input.has-input {
+        border-color: #2b6758 !important;
+        box-shadow: 0 0 5px rgba(43, 103, 88, 0.3) !important;
+        outline: none !important;
+      }
+
+      /* When modal has any filled inputs, show the Add Expense button in its 'hover' state */
+      #addExpenseModalOverlay.ready .es-save-wide,
+      #addExpenseModalOverlay.ready .es-save-wide:hover {
+        background-color: #00ffb3 !important;
+        transform: translateY(-2px) !important;
+      }
+
+      /* Remove spinner arrows for number inputs inside Add Expense modal */
+      #addExpenseModalOverlay input[type="number"]::-webkit-outer-spin-button,
+      #addExpenseModalOverlay input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      #addExpenseModalOverlay input[type="number"] {
+        -moz-appearance: textfield;
+      }
+
+      /* Remove decorative dropdown/arrow image for es-inputs in Add Expense modal */
+      #addExpenseModalOverlay .es-input {
+        background-image: none !important;
+        background-position: initial !important;
+        padding-right: 12px !important;
+      }
+
+      /* Ensure focus shows the green border inside Add Expense modal */
+      #addExpenseModalOverlay .es-input:focus {
+        border-color: #2b6758 !important;
+        box-shadow: 0 0 5px rgba(43, 103, 88, 0.3) !important;
+        outline: none !important;
+      }
+
+      /* Animation */
+      @keyframes esPop {
+        from { 
+          transform: scale(0.85); opacity: 0; 
+        }
+
+        to { 
+          transform: scale(1); opacity: 1; 
+        }
+      }
+
+        /* ===== FINANCIAL VIEW MODAL ===== */
+      .fv-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(6px);
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+      }
+
+      .fv-box {
+        background: #fff;
+        width: 90%;
+        max-width: 480px;
+        border-radius: 15px;
+        overflow: hidden;
+        animation: fvPop .25s ease;
+      }
+
+      @keyframes fvPop {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+
+      .fv-header {
+        background: #2b6758;
+        color: white;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .fv-header h3 { font-size: 1.2rem; font-weight: 600; }
+
+      .fv-close {
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        color: white;
+        cursor: pointer;
+      }
+
+      .fv-close:hover { color: #11D58F; }
+
+      .fv-body {
+        padding: 1.5rem 2rem;
+      }
+
+      .fv-body p {
+        font-size: 0.95rem;
+        margin: 8px 0;
+        color: #333;
+      }
+
+      .fv-body strong {
+        color: #265c4f;
+        font-weight: 600;
+      }
+
+      /* Buttons */
+      .fv-btn-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 25px;
+        gap: 12px;
+      }
+
+      .fv-btn-green {
+        flex: 1;
+        background: #2b6758;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+      }
+
+      .fv-btn-green:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .fv-btn-green:active {
+        transform: translateY(0);
+      }
+
+      /* ============ TRACK SPENDING TABLE ============ */
+      .ts-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+
+      .ts-header h2 {
+        color: #255f4c;
+        font-size: 1.4rem;
+        font-weight: 700;
+      }
+
+      .ts-add-btn {
+        background: #2c6b57;
+        color: white;
+        border: none;
+        font-size: 0.9rem;
+        border-radius: 6px;
+        padding: 8px 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 18px;
+        margin-bottom: 20px;
+        transition: background 0.3s ease, transform 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+      }
+
+      .ts-add-btn span {
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+
+      .ts-add-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .ts-add-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .ts-add-btn:active {
+      transform: translateY(0);
+      }
+
+      .ts-table-wrapper {
+        width: calc(100% - 4rem); /* align with page padding */
+        margin: 20px 2rem;        /* align left/right with header content */
+        overflow-x: auto;
+        background: #fff;
+        padding: 25px;           /* optional: smaller padding */
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-top: 38px;
+      }
+
+      .ts-table {
+        width: 100%;
+        background: white;
+      }
+
+      /* Action buttons */
+      .ts-view,
+      .ts-edit {
+        width: 60px;
+        padding: 10px 0;
+        font-weight: 600;
+        font-size: 14px;
+        background: #2c6b57;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background 0.3s ease, transform 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+      }
+
+      .ts-edit:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .ts-view:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .ts-edit:active {
+      transform: translateY(0);
+      }
+
+      .ts-view:active {
+      transform: translateY(0);
+      }
+
+
+      /* ===== RECORD TABLE WRAPPER (same as Track Spending) ===== */
+      .record-table-wrapper {
+        width: calc(100% - 4rem); /* align with page padding */
+        margin: 40px 2rem;        /* align left/right with header content */
+        overflow-x: auto;
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      /* Table style same as Track Spending */
+      .record-table {
+        width: 100%;
+        background: white;
+      }
+
+      .record-table thead {
+        background-color: #2b6758;
+        color: white;
+      }
+
+      .record-table th,
+      .record-table td {
+        padding: 14px 18px;
+        text-align: center;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      /* Hover like Track Spending */
+      .record-table tbody tr:hover {
+        background-color: #ecfdf5;
+      }
+
+      /* Status colors */
+      .rec-approved {
+        color: #1e3a8a;
+        font-weight: 600;
+      }
+
+      .rec-pending {
+        color: #854d0e;
+        font-weight: 600;
+      }
+
+      /* Buttons same size as Track Spending */
+      .rec-view-btn,
+      .rec-download-btn {
+        width: 80px;
+        padding: 10px 0;
+        font-weight: 600;
+        font-size: 14px;
+        background: #2c6b57;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background 0.3s ease, transform 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+      }
+
+      .rec-download-btn {
+        background: #265c4f;
+      }
+
+      .rec-view-btn:hover,
+      .rec-download-btn:hover {
+        background-color: #00ffb3;
+        transform: translateY(-2px);
+      }
+
+      .rec-view-btn:active,
+      .rec-download-btn:active {
+        transform: translateY(0);
+      }
+
+      /* Download overlay */
+      .download-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.45); justify-content: center; align-items: center; z-index: 1500; }
+      .download-card { background:#fff; padding:24px 28px; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.18); max-width:360px; text-align:center; }
+      .download-spinner { width:48px; height:48px; border-radius:50%; border:5px solid #eee; border-top-color:#2b6758; margin:0 auto 12px; animation: spin 1s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+    </style>
+  </head>
+
+    <body>
+      <header>
+        <div class="logo">
+          <img src="assets/img/logo.jpg" alt="OrgBoard Logo" class="orgboard-logo" />
+          <div>
+            <h1>ORGBOARD</h1>
+            <p>Campus Finance Hub</p>
+          </div>
+        </div>
+        <div class="icons">
+          <button id="mobileMenuBtn" class="mobile-menu-btn" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">☰</button>
+          <!-- Notification bell (inline SVG) -->
+          <div class="notif-container" style="position:relative;">
+            <button id="notifBtn" class="notif-btn" aria-label="Notifications" title="Notifications">
+              <!-- Bell SVG -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M15 17H9a3 3 0 0 1-3-3v-3c0-3.07 1.63-5.64 4.5-6.32V4a1.5 1.5 0 0 1 3 0v.68C16.37 5.36 18 7.92 18 11v3a3 3 0 0 1-3 3z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="notif-badge" id="notifBadge" style="display:none;">3</span>
+            </button>
+
+            <div class="notif-dropdown" id="notifDropdown" aria-hidden="true">
+              <div class="notif-header">
+                <strong>Notifications</strong>
+                <div>
+                  <button id="markAllRead" class="orgboard-btn" style="padding:6px 10px; min-width: auto; font-size:0.82rem;">Mark all read</button>
+              <script src="assets/js/avatar.js"></script>
+                </div>
+              </div>
+
+              <div class="notif-list" id="notifList">
+                <a href="#" class="notif-entry unread" data-id="1">
+                  <div class="notif-body">
+                    <div class="notif-message">New budget request submitted</div>
+                    <div class="notif-time">2m ago</div>
+                  </div>
+                </a>
+                <a href="#" class="notif-entry unread" data-id="2">
+                  <div class="notif-body">
+                    <div class="notif-message">Event approved by finance</div>
+                    <div class="notif-time">1h ago</div>
+                  </div>
+                </a>
+                <a href="#" class="notif-entry" data-id="3">
+                  <div class="notif-body">
+                    <div class="notif-message">Reminder: Submit reports</div>
+                    <div class="notif-time">Yesterday</div>
+                  </div>
+                </a>
+              </div>
+
+              <div style="padding:10px; border-top:1px solid #eee; display:flex; justify-content:center;">
+                <button class="orgboard-btn" id="viewAllNotif">View all</button>
+              </div>
+            </div>
+          </div>
+        <!-- PROFILE DROPDOWN -->
+    <div class="profile-container">
+      <button class="profile-btn" id="profileBtn">
+        <img id="profileImage" class="profile-img" src="" alt="Profile" style="display:none;">
+        <i id="profileInitial" class="bi bi-person" aria-hidden="true" style="font-size:1.05rem;color:white;"></i>
+      </button>
+
+      <div class="profile-dropdown" id="profileDropdown">
+        <div class="profile-info">
+          <div class="profile-avatar" id="profileAvatar">
+            <img id="dropdownImage" class="avatar-img" src="" alt="Profile" style="display:none;">
+            <i id="dropdownInitial" class="bi bi-person" aria-hidden="true" style="font-size:0.95rem;color:white;"></i>
+          </div>
+          <div class="profile-text">
+            <div class="profile-name" id="profileName">Username</div>
+            <div class="profile-role" id="profileRole">Treasurer</div>
+          </div>
+        </div>
+        <hr />
+        <script>
+          (function(){
+            try{
+              const data = localStorage.getItem('orgboardAvatar');
+              const storedRole = (localStorage.getItem('orgboardRole')||'').toLowerCase();
+              const storedOfficer = (localStorage.getItem('orgboardOfficer')||'').toLowerCase();
+              if(!data) return;
+              const pageRoleEl = document.getElementById('profileRole');
+              const pageRole = pageRoleEl ? pageRoleEl.textContent.trim().toLowerCase() : '';
+              let show = false;
+              if(storedRole === 'officer') {
+                if(storedOfficer && pageRole.includes(storedOfficer)) show = true;
+              } else if(storedRole) {
+                if(pageRole.includes(storedRole)) show = true;
+              }
+              if(!show) return;
+              const pi = document.getElementById('profileImage');
+              const di = document.getElementById('dropdownImage');
+              const piInitial = document.getElementById('profileInitial');
+              const diInitial = document.getElementById('dropdownInitial');
+              if(pi){ pi.src = data; pi.style.display = 'block'; if(piInitial) piInitial.style.display = 'none'; }
+              if(di){ di.src = data; di.style.display = 'block'; if(diInitial) diInitial.style.display = 'none'; }
+            }catch(e){/* ignore */}
+          })();
+        </script>
+        <ul class="profile-menu">
+          <li id="logoutBtn" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FontAwesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+
+        </div>
+      </header>
+
+      <nav class="desktop-nav">
+        <a href="?section=dashboard" id="dashboardLink">Dashboard</a>
+        <a href="?section=progress" id="progressLink">Progress Tracking</a>
+        <a href="?section=financial" id="financialLink">Financial Report</a>
+        <a href="#" id="trackSpendingLink">Track Spending</a>
+        <a href="#" id="recordLink">Record</a>
+        <span class="welcome-back">WELCOME BACK, USER!</span>
+      </nav>
+
+      <!-- Mobile off-canvas nav + overlay -->
+      <aside id="mobileNav" class="mobile-nav" aria-hidden="true">
+        <a href="#dashboardSection" id="m_dashboardLink">Dashboard</a>
+        <a href="#progressSection" id="m_progressLink">Progress Tracking</a>
+        <a href="#financialReportSection" id="m_financialLink">Financial Report</a>
+        <a href="#trackSpendingSection" id="m_trackSpendingLink">Track Spending</a>
+        <a href="#recordSection" id="m_recordLink">Record</a>
+      </aside>
+      <div id="mobileOverlay" class="mobile-overlay" tabindex="-1" aria-hidden="true"></div>
+
+      <style>
+        nav a.active{color:#00ffb3;font-weight:700;text-decoration:none;}
+
+        /* Mobile menu button */
+        .mobile-menu-btn{display:none;background:none;border:none;color:white;font-size:1.6rem;padding:6px 10px;cursor:pointer}
+
+        /* Mobile off-canvas nav */
+        .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:90;transition:opacity .25s}
+        .mobile-nav{position:fixed;top:0;right:0;height:100vh;width:260px;background:#265c4f;color:white;transform:translateX(110%);transition:transform .32s ease,z-index .01s;z-index:95;padding:1.2rem 1rem;display:flex;flex-direction:column;gap:12px}
+        .mobile-nav a{color:white;text-decoration:none;font-weight:600;padding:10px 6px;border-radius:8px}
+        .mobile-nav a:hover{background:#234a3f;color:#fff}
+        .mobile-nav.open{transform:translateX(0)}
+        .mobile-overlay.show{display:block;opacity:1}
+
+        /* Mobile ordering: notif first, profile second, menu last */
+        @media (max-width: 768px){
+          .desktop-nav{display:none}
+          .mobile-menu-btn{display:inline-flex}
+          header{padding:0.6rem 0.9rem}
+          .icons{display:flex;align-items:center;gap:12px}
+          .icons .notif-container{order:1}
+          .icons .profile-container{order:2}
+          .icons .mobile-menu-btn{order:3}
+        }
+
+        /* Keep desktop layout on larger screens */
+        @media (min-width: 769px){
+          .mobile-nav{display:none}
+          .mobile-overlay{display:none}
+        }
+      </style>
+
+      <script>
+        (function(){
+          const params=new URLSearchParams(window.location.search);
+          const section=(params.get('section')||'dashboard').toLowerCase();
+          const mapping={dashboard:'dashboardLink',progress:'progressLink',financial:'financialLink'};
+          Object.values(mapping).forEach(id=>{const el=document.getElementById(id); if(el) el.classList.remove('active');});
+          const activeEl=document.getElementById(mapping[section]||mapping.dashboard); if(activeEl) activeEl.classList.add('active');
+
+          // Mirror active state to mobile links (ids prefixed with m_)
+          const mobileMapping={dashboard:'m_dashboardLink',progress:'m_progressLink',financial:'m_financialLink'};
+          Object.values(mobileMapping).forEach(id=>{const el=document.getElementById(id); if(el) el.classList && el.classList.remove('active');});
+          const activeMobile=document.getElementById(mobileMapping[section]||mobileMapping.dashboard); if(activeMobile) activeMobile.classList.add('active');
+        })();
+
+        // Mobile toggle behavior
+        (function(){
+          const btn=document.getElementById('mobileMenuBtn');
+          const mobileNav=document.getElementById('mobileNav');
+          const overlay=document.getElementById('mobileOverlay');
+          if(!btn||!mobileNav||!overlay) return;
+
+          function openNav(){
+            mobileNav.classList.add('open');
+            overlay.classList.add('show');
+            btn.setAttribute('aria-expanded','true');
+            mobileNav.setAttribute('aria-hidden','false');
+            document.body.style.overflow='hidden';
+          }
+
+          function closeNav(){
+            mobileNav.classList.remove('open');
+            overlay.classList.remove('show');
+            btn.setAttribute('aria-expanded','false');
+            mobileNav.setAttribute('aria-hidden','true');
+            document.body.style.overflow='';
+          }
+
+          btn.addEventListener('click', function(){
+            if(mobileNav.classList.contains('open')) closeNav(); else openNav();
+          });
+
+          overlay.addEventListener('click', closeNav);
+
+          // Close when clicking any mobile nav link and set active states
+          const desktopIds = ['dashboardLink','progressLink','financialLink','trackSpendingLink','recordLink'];
+          const mobileIds = ['m_dashboardLink','m_progressLink','m_financialLink','m_trackSpendingLink','m_recordLink'];
+          const hashToDesktop = {
+            '#dashboardSection':'dashboardLink',
+            '#progressSection':'progressLink',
+            '#financialReportSection':'financialLink',
+            '#trackSpendingSection':'trackSpendingLink',
+            '#recordSection':'recordLink'
+          };
+
+          mobileNav.querySelectorAll('a').forEach(a=>a.addEventListener('click', function(e){
+            // Prevent default on mobile, close menu, then trigger desktop handler and smooth-scroll
+            e.preventDefault();
+            const href = a.getAttribute('href') || '';
+            const targetDesktop = hashToDesktop[href];
+
+            // close the mobile menu immediately
+            closeNav();
+
+            // after menu closes, call desktop link handler to toggle sections and then scroll
+            setTimeout(()=>{
+              try{
+                if(targetDesktop){
+                  const desktopEl = document.getElementById(targetDesktop);
+                  if(desktopEl) desktopEl.click();
+                }
+                if(href){
+                  const targetEl = document.querySelector(href);
+                  if(targetEl) targetEl.scrollIntoView({behavior:'smooth', block:'start'});
+                  if(history && history.replaceState) history.replaceState(null, '', href);
+                }
+                // update active classes
+                desktopIds.forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.remove('active'); });
+                mobileIds.forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.remove('active'); });
+                if(targetDesktop){ const d=document.getElementById(targetDesktop); if(d) d.classList.add('active'); }
+                a.classList.add('active');
+              }catch(err){ console.error(err); }
+            }, 200);
+          }));
+
+          // Close on Escape
+          document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeNav(); });
+        })();
+      </script>
+
+    <section id="dashboardSection">
+      <section class="dashboard-cards">
+        <div class="card red-card"><p>₱50,000 / ₱100,000</p><p class="heading">Budget Used</p></div>
+        <div class="card green-card"><p>3</p><p class="heading">Ongoing Event</p></div>
+        <div class="card blue-card"><p>5</p><p class="heading">Completed Event</p></div>
+        <div class="card yellow-card"><p>3</p><p class="heading">Pending Report</p></div>
+      </section>
+
+      <section class="main-grid">
+        <div class="box" id="progressSection">
+          <h2>Project Time Progress Tracking for October</h2>
+          <button class="dashboard-view-btn">View</button>
+          <canvas id="progressChart" height="180"></canvas>
+        </div>
+
+        <div class="box">
+          <h2>Events Updates & Announcement</h2>
+          <button class="dashboard-view-btn" id="eventsViewBtn">View</button>
+
+          <a href="#" class="event-item">
+            <p><strong>Outreach Project Planning</strong></p>
+            <div class="event-details">
+              <span>Nov. 10, Manggahan</span>
+              <em class="status">Upcoming</em>
+            </div>
+          </a>
+
+          <a href="#" class="event-item">
+            <p><strong>Orientation</strong></p>
+            <div class="event-details">
+              <span>Nov. 15, Social Hall</span>
+              <em class="status">Upcoming</em>
+            </div>
+          </a>
+        </div>
+
+        <div class="box">
+          <h2>Notifications</h2>
+          <button class="dashboard-view-btn">View</button>
+          <a href="#" class="notif-item"><p><strong>Budget for outreach Project awaiting approval.</strong></p></a>
+          <a href="#" class="notif-item"><p><strong>Financial report due next week</strong></p></a>
+          <a href="#" class="notif-item"><p><strong>New event posted by treasurer.</strong></p></a>
+        </div>
+
+        <div class="box">
+          <h2>Recent Financial Reports</h2>
+          <button class="dashboard-view-btn">View</button>
+          <table>
+      <thead>
+        <tr>
+          <th>Reports</th>
+          <th>Date Submitted</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Oct Event</td>
+          <td>Oct. 30, 2025</td>
+          <td class="status-pending">Pending</td>
+          <td><button class="financial-view-btn">View</button></td>
+        </tr>
+        <tr>
+          <td>Sep Supplies</td>
+          <td>Sep. 5, 2025</td>
+          <td class="status-approved">Approved</td>
+          <td><button class="financial-view-btn">View</button></td>
+        </tr>
+        <tr>
+          <td>Aug Event</td>
+          <td>Aug. 16, 2025</td>
+          <td class="status-approved">Approved</td>
+          <td><button class="financial-view-btn">View</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+        </div>
+      </section>
+    </section>
+
+    <section id="financialReportSection">
+      <div class="filter-container">
+
+        <div class="filter-row search-row">
+      <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="Search financial reports..." />
+        <button id="searchBtn" class="search-btn" aria-label="Search">
+          <!-- Embedded SVG icon (consistent OrgBoard style) -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              class="search-icon">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+
+        <!-- 🎛 Second Row: Dropdowns -->
+        <div class="filter-row dropdown-row">
+          <select id="monthFilter">
+            <option value="">Select Month / Year</option>
+            <option>Oct 2025</option>
+            <option>Nov 2025</option>
+          </select>
+          <select id="projectFilter">
+            <option value="">Select Project / Event</option>
+            <option>Campus Fair</option>
+            <option>Outreach Program</option>
+            <option>Materials Purchase</option>
+            <option>Sports Fest</option>
+          </select>
+          <select id="reportFilter">
+            <option value="">Select Report / Name / ID</option>
+            <option>Fundraising Income</option>
+            <option>Venue Rental</option>
+            <option>Materials Purchase</option>
+            <option>Sponsorship</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-responsive">
+        <table class="finance-table">
+          <thead>
+            <tr>
+              <th>Project/Event</th>
+              <th>Date</th>
+              <th>Report Title</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Remarks</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Campus Fair</td>
+              <td>Oct 01, 2025</td>
+              <td>Fundraising Income</td>
+              <td>Income</td>
+              <td>₱25,000</td>
+              <td class="status-approved">Approved</td>
+              <td>-</td>
+                  <td class="action-cell">
+          <button class="orgboard-btn">View</button>
+          <button class="orgboard-btn">Edit</button>
+        </td>
+            </tr>
+            <tr>
+              <td>Outreach Program</td>
+              <td>Oct 05, 2025</td>
+              <td>Venue Rental</td>
+              <td>Expense</td>
+              <td>₱10,000</td>
+              <td class="status-approved">Approved</td>
+              <td>Event A</td>
+                  <td class="action-cell">
+          <button class="orgboard-btn">View</button>
+          <button class="orgboard-btn">Edit</button>
+        </td>
+            </tr>
+            <tr>
+              <td>Materials Purchase</td>
+              <td>Oct 07, 2025</td>
+              <td>Materials Purchase</td>
+              <td>Expense</td>
+              <td>₱7,500</td>
+              <td class="status-pending">Pending</td>
+              <td>Needs Receipt</td>
+                  <td class="action-cell">
+          <button class="orgboard-btn">View</button>
+          <button class="orgboard-btn">Edit</button>
+        </td>
+            </tr>
+            <tr>
+              <td>Sports Fest</td>
+              <td>Oct 10, 2025</td>
+              <td>Sponsorship</td>
+              <td>Income</td>
+              <td>₱15,000</td>
+              <td class="status-approved">Approved</td>
+              <td>From Alumni Org</td> 
+              <td class="action-cell">
+              <button class="orgboard-btn">View</button>
+              <button class="orgboard-btn">Edit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+        <!-- ==== ACTION BUTTONS BELOW TABLE ==== -->
+    </section>
+
+    <section id="progressTrackingSection" style="display: none;">
+      <div class="progress-wrapper">
+        <div class="table-responsive">
+        <table class="finance-table">
+          <thead>
+            <tr>
+              <th>Event Project</th>
+              <th>Budget Used</th>
+              <th>Progress</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Campus Fair</td>
+              <td>₱20,000 / ₱25,000</td>
+              <td>
+                <div class="progress-container">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 83%;"></div>
+                  </div>
+                  <span class="progress-percent">83%</span>
+                </div>
+              </td>
+              <td class="center-btn">
+                <button class="table-btn" onclick="es_openModal()">Track</button>
+                <button class="report-btn">Report</button>
+            </td>
+            </tr>
+            <tr>
+              <td>Outreach Program</td>
+              <td>₱8,000 / ₱10,000</td>
+              <td>
+                <div class="progress-container">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%;"></div>
+                  </div>
+                  <span class="progress-percent">50%</span>
+                </div>
+              </td>
+              <td class="center-btn">
+                <button class="table-btn" onclick="es_openModal()">Track</button>
+                <button class="report-btn">Report</button>
+            </td>
+            </tr>
+            <tr>
+              <td>Sports Fest</td>
+              <td>₱12,000 / ₱15,000</td>
+              <td>
+                <div class="progress-container">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%;"></div>
+                  </div>
+                  <span class="progress-percent">100%</span>
+                </div>
+              </td>
+              <td class="center-btn">
+                <button class="table-btn" onclick="es_openModal()">Track</button>
+                <button class="report-btn" >Report</button>
+            </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </section>
+
+
+      <!-- ==== MODAL ==== -->
+      <div class="modal-overlay" id="eventsModal">
+        <div class="modal">
+          <div class="modal-header">
+            <input type="text" placeholder="Search Events and Announcements" />
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <button id="refreshModal" class="refresh-btn">⟳</button>
+                <button class="close-modal" id="closeModal">&times;</button>
+              </div>
+          </div>
+
+
+          <div class="modal-content">
+            <div>
+              <h3>Upcoming Events</h3>
+              <div class="event-card">
+                <h4>Campus Fair</h4>
+                <p>November 5, 2025</p>
+                <div class="event-status-1">Ongoing</div>
+                <button class="view-details">View Details</button>
+              </div>
+              <div class="event-card">
+                <h4>Leadership Summit</h4>
+                <p>November 12, 2025</p>
+                <div class="event-status-2">Upcoming</div>
+                <button class="view-details">View Details</button>
+              </div>
+              <div class="event-card">
+                <h4>Outreach Program</h4>
+                <p>October 29, 2025</p>
+                <div class="event-status-3">Completed</div>
+                <button class="view-details">View Details</button>
+              </div>
+            </div>
+
+            <div>
+              <h3>Announcement Feed</h3>
+              <div class="event-card">
+                <h4>📢[Nov 1]</h4>
+                <p>Budget for Sports Fest has been approved! Prepare your Teams.</p>
+              </div>
+              <div class="event-card">
+                <h4>📢[Oct 28]</h4>
+                <p>Deadline for organization reports extended to Nov 3.</p>
+              </div>
+              <div class="event-card">
+                <h4>📢[Oct 31]</h4>
+                <p>Reminder: Campus Fair participant registration closes tomorrow.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==== FLOATING EVENT DETAILS CARD ==== -->
+      <div class="details-float" id="detailsFloat">
+        <div class="details-content">
+          <div class="details-header">
+            <h3 id="detailsTitle">Event Details</h3>
+            <button class="close-modal" id="closeDetails">&times;</button>
+          </div>
+
+          <div class="details-body">
+            <p><strong>Event:</strong> <span id="eventName">Outreach Program</span></p>
+            <p><strong>Date:</strong> <span id="eventDate">Oct 29, 2025</span></p>
+            <p><strong>Budget:</strong> <span id="eventBudget">₱10,000</span></p>
+            <p><strong>Status:</strong> <span id="eventStatus">Complete</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= FINANCIAL VIEW FLOATING MODAL ================= -->
+<div id="financeViewModal" class="fv-overlay">
+    <div class="fv-box">
+
+        <div class="fv-header">
+            <h3>Details</h3>
+            <button class="fv-close">&times;</button>
+        </div>
+
+        <div class="fv-body">
+            <p><strong>Project/Event:</strong> <span id="fvProject"></span></p>
+            <p><strong>Date:</strong> <span id="fvDate"></span></p>
+            <p><strong>Title:</strong> <span id="fvTitle"></span></p>
+            <p><strong>Type:</strong> <span id="fvType"></span></p>
+            <p><strong>Amount:</strong> <span id="fvAmount"></span></p>
+            <p><strong>Status:</strong> <span id="fvStatus"></span></p>
+
+            <div class="fv-btn-row">
+                <button class="fv-btn-green">Upload Report</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ================== TRACK SPENDING SECTION ================== -->
+<section id="trackSpendingSection">
+
+    <div class="ts-table-wrapper">
+        <table class="ts-table">
+            <thead>
+                <tr>
+                    <th>Project/Event</th>
+                    <th>Date</th>
+                    <th>Expense Name</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                  <td>Campus Fair</td>
+                  <td>Oct 01, 2025</td>
+                  <td>Fundraising Income</td>
+                  <td>Event</td>
+                  <td>P25,000</td>
+                  <td>Approved</td>
+                  <td>-</td>
+                  <td class="action-cell">
+                    <button class="ts-view">View</button>
+                    <button class="ts-edit">Edit</button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Outreach Program</td>
+                  <td>Oct 05, 2025</td>
+                  <td>Venue Rental</td>
+                  <td>Event</td>
+                  <td>P10,000</td>
+                  <td>Approved</td>
+                  <td>Event A</td>
+                  <td class="action-cell">
+                    <button class="ts-view">View</button>
+                    <button class="ts-edit">Edit</button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Materials Purchase</td>
+                  <td>Oct 07, 2025</td>
+                  <td>Materials Purchase</td>
+                  <td>Supplies</td>
+                  <td>P7,500</td>
+                  <td>Pending</td>
+                  <td>Needs Receipt</td>
+                  <td class="action-cell">
+                    <button class="ts-view">View</button>
+                    <button class="ts-edit">Edit</button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Sports Fest</td>
+                  <td>Oct 10, 2025</td>
+                  <td>Sponsorship</td>
+                  <td>Supplies</td>
+                  <td>P15,000</td>
+                  <td>Approved</td>
+                  <td>From Alumni Org</td>
+                  <td class="action-cell">
+                    <button class="ts-view">View</button>
+                    <button class="ts-edit">Edit</button>
+                  </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+      <div class="ts-header">
+        <button id="addExpenseBtn" class="ts-add-btn">
+            <span>+</span> Add New Expense
+        </button>
+      </div>
+
+</section>
+
+<!-- RECORD SECTION -->
+<section id="recordSection" style="display:none;">
+
+    <div class="record-table-wrapper">
+        <table class="record-table">
+            <thead>
+                <tr>
+                    <th>Date Submitted</th>
+                    <th>Record Title</th>
+                    <th>Category</th>
+                    <th>Attached Files</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Oct 28, 2025</td>
+                    <td>Monthly Report - Oct</td>
+                    <td>Event</td>
+                    <td>2 Files</td>
+                    <td>Report</td>
+                    <td class="rec-approved">Approved</td>
+                    <td><button class="rec-view-btn">View</button></td>
+                </tr>
+
+                <tr>
+                    <td>Nov 02, 2025</td>
+                    <td>Sports Fest Budget</td>
+                    <td>Supplies</td>
+                    <td>1 File</td>
+                    <td>Report</td>
+                    <td class="rec-pending">Pending</td>
+                    <td><button class="rec-view-btn">View</button></td>
+                </tr>
+
+                <tr>
+                    <td>Nov 04, 2025</td>
+                    <td>Orientation Receipts</td>
+                    <td>Supplies</td>
+                    <td>5 Files</td>
+                    <td>Scans</td>
+                    <td class="rec-approved">Approved</td>
+                    <td><button class="rec-view-btn">View</button></td>
+                </tr>
+
+                <tr>
+                  <td>Nov 05, 2025</td>
+                  <td>Event A Invoice</td>
+                  <td>Personnel</td>
+                  <td>1 File</td>
+                  <td>Expense</td>
+                  <td class="rec-approved">Approved</td>
+                  <td><button class="rec-download-btn" data-filename="Event-A-Invoice.txt">Download</button></td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</section>
+
+
+    <script>
+      // ====== PROGRESS CHART ======
+      const ctx = document.getElementById("progressChart").getContext("2d");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["", "", "", "", "", "", ""],
+          datasets: [{
+            label: "Progress",
+            data: [5000, 10000, 18000, 26000, 37000, 49000, 54000],
+            borderColor: "#2b6758",
+            backgroundColor: "rgba(43, 103, 88, 0.2)",
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2,
+            pointRadius: 5,
+            pointBackgroundColor: "#2b6758",
+          }],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { display: false } },
+            y: { beginAtZero: true, ticks: { color: "#555" }, grid: { color: "#eee" } },
+          },
+        },
+      });
+
+      // ====== MODAL FUNCTIONALITY ======
+      const modal = document.getElementById("eventsModal");
+      const openModal = document.getElementById("eventsViewBtn");
+      const closeModal = document.getElementById("closeModal");
+
+      openModal?.addEventListener("click", () => {
+        modal.style.display = "flex";
+        document.body.style.overflow = "hidden";
+      });
+
+      closeModal?.addEventListener("click", () => {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+      });
+
+      window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.style.display = "none";
+          document.body.style.overflow = "auto";
+        }
+      });
+
+      // ===== SEARCH IN EVENTS MODAL =====
+      const searchInput = document.querySelector(".modal-header input");
+      const eventCards = document.querySelectorAll(".modal-content .event-card");
+
+      searchInput?.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase().trim();
+        eventCards.forEach(card => {
+          const text = card.innerText.toLowerCase();
+          card.style.display = text.includes(query) ? "block" : "none";
+        });
+      });
+
+      // ===== REFRESH ICON FUNCTION =====
+      const refreshBtn = document.getElementById("refreshModal");
+      refreshBtn?.addEventListener("click", () => {
+        refreshBtn.style.transform = "rotate(360deg)";
+        setTimeout(() => (refreshBtn.style.transform = "rotate(0deg)"), 500);
+        searchInput.value = "";
+        eventCards.forEach((card, index) => {
+          card.style.display = "block";
+          card.classList.remove("refresh-anim");
+          void card.offsetWidth;
+          card.classList.add("refresh-anim");
+          card.style.animationDelay = `${index * 0.1}s`;
+        });
+      });
+
+      // ===== EVENT DETAILS FLOATING CARD =====
+      const detailsFloat = document.getElementById("detailsFloat");
+      const closeDetails = document.getElementById("closeDetails");
+      const eventName = document.getElementById("eventName");
+      const eventDate = document.getElementById("eventDate");
+      const eventBudget = document.getElementById("eventBudget");
+      const eventStatus = document.getElementById("eventStatus");
+      const detailsTitle = document.getElementById("detailsTitle");
+
+      const eventInfo = {
+        "Campus Fair": { date: "November 5, 2025", budget: "₱25,000", status: "Ongoing" },
+        "Leadership Summit": { date: "November 12, 2025", budget: "₱15,000", status: "Upcoming" },
+        "Outreach Program": { date: "October 29, 2025", budget: "₱10,000", status: "Completed" }
+      };
+
+      document.querySelectorAll(".event-card").forEach(card => {
+        const button = card.querySelector(".view-details");
+        const title = card.querySelector("h4")?.textContent?.trim();
+        if (button && eventInfo[title]) {
+          button.addEventListener("click", () => {
+            const info = eventInfo[title];
+            eventName.textContent = title;
+            eventDate.textContent = info.date;
+            eventBudget.textContent = info.budget;
+            eventStatus.textContent = info.status;
+            detailsTitle.textContent = "Event Details";
+            detailsFloat.style.display = "flex";
+            document.body.style.overflow = "hidden";
+          });
+        }
+      });
+
+      closeDetails?.addEventListener("click", () => {
+        detailsFloat.style.display = "none";
+        document.body.style.overflow = "auto";
+      });
+
+      window.addEventListener("click", (e) => {
+        if (e.target === detailsFloat) {
+          detailsFloat.style.display = "none";
+          document.body.style.overflow = "auto";
+        }
+      });
+
+
+      // ===== FINANCIAL REPORT SEARCH & FILTER =====
+      document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.getElementById("searchInput");
+        const monthFilter = document.getElementById("monthFilter");
+        const projectFilter = document.getElementById("projectFilter");
+        const reportFilter = document.getElementById("reportFilter");
+        const tableRows = document.querySelectorAll(".finance-table tbody tr");
+
+        function filterTable() {
+          const searchValue = searchInput.value.toLowerCase();
+          const monthValue = monthFilter.value.toLowerCase();
+          const projectValue = projectFilter.value.toLowerCase();
+          const reportValue = reportFilter.value.toLowerCase();
+
+          tableRows.forEach((row) => {
+            const text = row.textContent.toLowerCase();
+            const matchSearch = text.includes(searchValue);
+            const matchMonth = !monthValue || text.includes(monthValue);
+            const matchProject = !projectValue || text.includes(projectValue);
+            const matchReport = !reportValue || text.includes(reportValue);
+            row.style.display = matchSearch && matchMonth && matchProject && matchReport ? "" : "none";
+          });
+        }
+
+        searchInput?.addEventListener("input", filterTable);
+        monthFilter?.addEventListener("change", filterTable);
+        projectFilter?.addEventListener("change", filterTable);
+        reportFilter?.addEventListener("change", filterTable);
+      });
+
+      // ==== Example user data (normally from create account or backend) ====
+      const userData = {
+        name: localStorage.getItem("userFullName") || localStorage.getItem("userName") || "User",
+        role: localStorage.getItem("userRole") || localStorage.getItem('orgboardRole') || "Treasurer",
+        image: localStorage.getItem("userImage") || localStorage.getItem('orgboardAvatar') || "" // can be base64 or URL
+      };
+
+      // ==== Display user info ====
+      const nameDisplay = document.getElementById("profileName");
+      const roleDisplay = document.getElementById("profileRole");
+      const profileBtnImg = document.getElementById("profileImage");
+      const dropdownImg = document.getElementById("dropdownImage");
+      const profileBtnInitial = document.getElementById("profileInitial");
+      const dropdownInitial = document.getElementById("dropdownInitial");
+
+      nameDisplay.textContent = userData.name;
+      roleDisplay.textContent = userData.role;
+      // Use the Bootstrap person icon when no profile image is set
+      if (profileBtnInitial) profileBtnInitial.style.display = 'inline-flex';
+      if (dropdownInitial) dropdownInitial.style.display = 'inline-flex';
+
+      // Show profile image if available
+      if (userData.image) {
+        profileBtnImg.src = userData.image;
+        dropdownImg.src = userData.image;
+        profileBtnImg.style.display = "block";
+        dropdownImg.style.display = "block";
+        profileBtnInitial.style.display = "none";
+        dropdownInitial.style.display = "none";
+      }
+
+      // ==== Toggle dropdown ====
+      const profileBtn = document.getElementById("profileBtn");
+      const dropdown = document.getElementById("profileDropdown");
+
+      profileBtn.addEventListener("click", () => {
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!profileBtn.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.style.display = "none";
+        }
+      });
+
+      // ==== Notifications toggle ==== 
+      const notifBtnEl = document.getElementById('notifBtn');
+      const notifDropdownEl = document.getElementById('notifDropdown');
+      const notifBadgeEl = document.getElementById('notifBadge');
+
+      // Show sample badge if there are items (this value normally comes from backend)
+      if (notifBadgeEl) {
+        // Example: show badge when count > 0
+        const count = 3; // replace with real unread count
+        if (count > 0) {
+          notifBadgeEl.textContent = String(count);
+          notifBadgeEl.style.display = 'inline-block';
+        }
+      }
+
+      if (notifBtnEl && notifDropdownEl) {
+        notifBtnEl.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          const isOpen = notifDropdownEl.style.display === 'block';
+          // close profile dropdown if open
+          if (dropdown && dropdown.style.display === 'block') dropdown.style.display = 'none';
+          notifDropdownEl.style.display = isOpen ? 'none' : 'block';
+        });
+
+        // Close notif dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!notifBtnEl.contains(e.target) && !notifDropdownEl.contains(e.target)) {
+            notifDropdownEl.style.display = 'none';
+          }
+        });
+      }
+
+      // ===== Notification interactions =====
+      function updateBadgeCount() {
+        const list = document.querySelectorAll('#notifList .notif-entry.unread');
+        const count = list.length;
+        if (notifBadgeEl) {
+          notifBadgeEl.textContent = String(count);
+          notifBadgeEl.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+      }
+
+      // Mark all read
+      const markAllBtn = document.getElementById('markAllRead');
+      if (markAllBtn) {
+        markAllBtn.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          document.querySelectorAll('#notifList .notif-entry.unread').forEach(el => el.classList.remove('unread'));
+          updateBadgeCount();
+        });
+      }
+
+      // Click an entry: mark read and close dropdown (or navigate)
+      document.addEventListener('click', (e) => {
+        const entry = e.target.closest && e.target.closest('.notif-entry');
+        if (entry && document.getElementById('notifList')?.contains(entry)) {
+          e.preventDefault();
+          // mark as read
+          entry.classList.remove('unread');
+          updateBadgeCount();
+          // optional: close dropdown or navigate
+          // notifDropdownEl.style.display = 'none';
+        }
+      });
+
+      // Initialize badge on load
+      updateBadgeCount();
+
+      // notification functionality removed
+
+      // ==== Log Out ====
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          const msgEl = document.getElementById('successMessage');
+          if (msgEl) msgEl.textContent = 'Your account has been logged out successfully!';
+          const modal = document.getElementById('successCard');
+          if (modal) modal.classList.add('active');
+          setTimeout(() => {
+            if (modal) modal.classList.remove('active');
+            localStorage.clear();
+            window.location.href = 'login-page.html';
+          }, 3000);
+        });
+      }
+
+        // ===== BUDGET CHECK BUTTON  =====
+
+        function bc_openModal() {
+            document.getElementById("bc-modal-overlay").style.display = "flex";
+        }
+
+        function bc_closeModal() {
+            document.getElementById("bc-modal-overlay").style.display = "none";
+        }
+
+    // ===== SOCIAL WORK =====
+    function openSocialWork() {
+      document.getElementById("budgetSocialWork").style.display = "flex";
+    }
+
+    function closeSocialWork() {
+      document.getElementById("budgetSocialWork").style.display = "none";
+    }
+
+    // ===== SOCIAL CLUB =====
+    function openSocialClub() {
+      document.getElementById("budgetSocialClub").style.display = "flex";
+    }
+
+    function closeSocialClub() {
+      document.getElementById("budgetSocialClub").style.display = "none";
+    }
+
+    // ===== ART SOCIETY =====
+    function openArtSociety() {
+      document.getElementById("budgetArtSociety").style.display = "flex";
+    }
+
+    function closeArtSociety() {
+      document.getElementById("budgetArtSociety").style.display = "none";
+    }
+
+
+    // Max length for Send Reminder message
+    const SR_MAX_MESSAGE = 1000;
+
+    function sr_open() {
+      document.getElementById("sr-modal-overlay").style.display = "flex";
+    }
+
+    function sr_close() {
+      document.getElementById("sr-modal-overlay").style.display = "none";
+    }
+
+    // SEND FUNCTION WITH VALIDATION
+    function sr_send() {
+      let ok = true;
+
+      const r = document.getElementById("sr-recipient");
+      const s = document.getElementById("sr-subject");
+      const m = document.getElementById("sr-message");
+
+      const re = document.getElementById("sr-recipient-error");
+      const se = document.getElementById("sr-subject-error");
+      const me = document.getElementById("sr-message-error");
+
+      // Reset error state
+      re.style.display = se.style.display = me.style.display = "none";
+
+      // Required validation (login style)
+      if (r.value.trim() === "") {
+        re.textContent = "This field is required";
+        re.style.display = "block";
+        ok = false;
+      }
+
+      if (s.value.trim() === "") {
+        se.textContent = "This field is required";
+        se.style.display = "block";
+        ok = false;
+      }
+
+      if (m.value.trim() === "") {
+        me.textContent = "This field is required";
+        me.style.display = "block";
+        ok = false;
+      }
+
+      // Max message limit
+      if (m.value.length > SR_MAX_MESSAGE) {
+        me.textContent = `Maximum of ${SR_MAX_MESSAGE} characters only`;
+        me.style.display = "block";
+        ok = false;
+      }
+
+      if (!ok) return;
+
+      // SUCCESS — show site-wide success modal
+      const successMsgEl = document.getElementById('successMessage');
+      const successModal = document.getElementById('successCard');
+      if (successMsgEl) successMsgEl.textContent = 'Your reminder has been sent successfully!';
+      if (successModal) successModal.classList.add('active');
+
+      setTimeout(() => {
+        if (successModal) successModal.classList.remove('active');
+        sr_close();
+      }, 3000);
+    }
+
+    /* Live message limit counter (show on input/focus) */
+    (function(){
+      const msg = document.getElementById("sr-message");
+      const limit = document.getElementById("sr-message-limit");
+      if (msg && limit) {
+        limit.style.display = 'none';
+        const update = () => { const len = msg.value.length; limit.textContent = `${len} / ${SR_MAX_MESSAGE}`; limit.style.display = len>0 ? 'block' : 'none'; };
+        msg.addEventListener('input', update);
+        msg.addEventListener('focus', () => { limit.textContent = `${msg.value.length} / ${SR_MAX_MESSAGE}`; limit.style.display = 'block'; });
+        msg.addEventListener('blur', () => { if (msg.value.length === 0) limit.style.display = 'none'; });
+        limit.style.display = msg.value.length > 0 ? 'block' : 'none';
+      }
+    })();
+
+    // OPEN MODAL
+    function es_openModal() {
+      document.getElementById("esModalOverlay").style.display = "flex";
+    }
+
+    // CLOSE MODAL
+    function es_closeModal() {
+      document.getElementById("esModalOverlay").style.display = "none";
+    }
+
+    // NOTES COUNTER (show on input/focus)
+    (function(){
+      const notesEl = document.getElementById('esNotes');
+      const notesCount = document.getElementById('esNotesCount');
+      const max = notesEl ? notesEl.getAttribute('maxlength') || 250 : 250;
+      if (notesEl && notesCount) {
+        notesCount.style.display = 'none';
+        const update = () => { const len = notesEl.value.length; notesCount.textContent = `${len} / ${max}`; notesCount.style.display = len>0 ? 'block' : 'none'; };
+        notesEl.addEventListener('input', update);
+        notesEl.addEventListener('focus', update);
+        update();
+      }
+    })();
+
+    // SAVE VALIDATION
+    function es_saveChanges() {
+      let valid = true;
+
+      const type = document.querySelector("input[name='esEventType']:checked");
+      const status = document.getElementById("esCurrentStatus").value;
+      const notes = document.getElementById("esNotes").value.trim();
+
+      document.getElementById("esErrType").textContent =
+        type ? "" : "This field is required";
+
+      document.getElementById("esErrStatus").textContent =
+        status ? "" : "This field is required";
+
+      document.getElementById("esErrNotes").textContent =
+        notes ? "" : "This field is required";
+
+      if (!type || !status || !notes) valid = false;
+      if (!valid) return;
+
+      console.log("EVENT STATUS SAVED:", {
+        eventType: type.value,
+        currentStatus: status,
+        pendingReview: document.getElementById("esPendingReview").checked,
+        requiresFollowUp: document.getElementById("esRequiresFollowUp").checked,
+        notes,
+      });
+
+      es_closeModal();
+    }
+
+
+    // ==== FINANCIAL VIEW MODAL ====
+const fvModal = document.getElementById("financeViewModal");
+const fvClose = document.querySelector(".fv-close");
+
+function openFinanceModal(data) {
+    document.getElementById("fvProject").textContent = data.project;
+    document.getElementById("fvDate").textContent = data.date;
+    document.getElementById("fvTitle").textContent = data.title;
+    document.getElementById("fvType").textContent = data.type;
+    document.getElementById("fvAmount").textContent = data.amount;
+    document.getElementById("fvStatus").textContent = data.status;
+
+    fvModal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+}
+
+fvClose.addEventListener("click", () => {
+    fvModal.style.display = "none";
+    document.body.style.overflow = "auto";
+});
+
+// Close outside click
+fvModal.addEventListener("click", (e) => {
+    if (e.target === fvModal) {
+        fvModal.style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+});
+
+// Attach View buttons
+document.querySelectorAll(".finance-table tbody tr").forEach(row => {
+    const viewBtn = row.querySelector("td .orgboard-btn");
+
+    if (viewBtn) {
+        viewBtn.addEventListener("click", () => {
+            openFinanceModal({
+                project: row.children[0].textContent,
+                date: row.children[1].textContent,
+                title: row.children[2].textContent,
+                type: row.children[3].textContent,
+                amount: row.children[4].textContent,
+                status: row.children[5].textContent
+            });
+        });
+    }
+});
+
+// ====== SECTION ELEMENTS ======
+const dashboardSection = document.getElementById("dashboardSection");
+const financialReportSection = document.getElementById("financialReportSection");
+const progressTrackingSection = document.getElementById("progressTrackingSection");
+const trackSpendingSection = document.getElementById("trackSpendingSection");
+const recordSection = document.getElementById("recordSection");
+
+// ====== NAV LINKS ======
+const dashboardLink = document.getElementById("dashboardLink");
+const financialLink = document.getElementById("financialLink");
+const progressLink = document.getElementById("progressLink");
+const trackSpendingLink = document.getElementById("trackSpendingLink");
+const recordLink = document.getElementById("recordLink");
+
+// ====== HIDE ALL SECTIONS (UPDATED) ======
+function hideAll() {
+  dashboardSection.style.display = "none";
+  financialReportSection.style.display = "none";
+  progressTrackingSection.style.display = "none";
+  trackSpendingSection.style.display = "none";
+  recordSection.style.display = "none";  // <<< IMPORTANT
+}
+
+// ====== ACTIVE LINK HIGHLIGHT ======
+function setActiveLink(link) {
+  document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
+  link.classList.add("active");
+}
+
+// ===== DEFAULT: Show Dashboard =====
+hideAll();
+dashboardSection.style.display = "block";
+setActiveLink(dashboardLink);
+
+// ===== DASHBOARD =====
+dashboardLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  hideAll();
+  dashboardSection.style.display = "block";
+  setActiveLink(dashboardLink);
+});
+
+// ===== FINANCIAL REPORT =====
+financialLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  hideAll();
+  financialReportSection.style.display = "block";
+  setActiveLink(financialLink);
+});
+
+// ===== PROGRESS TRACKING =====
+progressLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  hideAll();
+  progressTrackingSection.style.display = "block";
+  setActiveLink(progressLink);
+});
+
+// ===== TRACK SPENDING =====
+trackSpendingLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  hideAll();
+  trackSpendingSection.style.display = "block";
+  setActiveLink(trackSpendingLink);
+});
+
+// ===== RECORD SECTION (FIXED) =====
+recordLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  hideAll();
+  recordSection.style.display = "block";
+  setActiveLink(recordLink);
+});
+
+// ===== DOWNLOAD BUTTON =====
+// Note: overlay and success modal elements are added after this script in the DOM.
+// To ensure they exist we query them inside the click handler.
+
+document.querySelectorAll(".rec-download-btn").forEach(btn => {
+  btn.addEventListener("click", async (e) => {
+    const button = e.currentTarget;
+    // query overlays/modal elements now (they are inserted after this script)
+    const downloadOverlay = document.getElementById('downloadOverlay');
+    const downloadMessageEl = document.getElementById('downloadMessage');
+    const successCard = document.getElementById('successCard');
+    const successMessage = document.getElementById('successMessage');
+    const row = button.closest('tr');
+    const filename = button.dataset.filename || (row?.children[1]?.textContent?.trim().replace(/\s+/g,'-') + '.txt');
+
+    // show starting overlay
+    if (downloadMessageEl) downloadMessageEl.textContent = 'Download starting...';
+    if (downloadOverlay) { downloadOverlay.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+
+    // wait 3 seconds while overlay is visible
+    await new Promise(r => setTimeout(r, 3000));
+
+    // hide overlay
+    if (downloadOverlay) { downloadOverlay.style.display = 'none'; document.body.style.overflow = 'auto'; }
+
+    // build a simple text/CSV from the row cells as a real download
+    let content = '';
+    if (row) {
+      const cols = Array.from(row.children).map(td => td.textContent.trim());
+      content = `Record\nDate Submitted: ${cols[0]}\nTitle: ${cols[1]}\nCategory: ${cols[2]}\nAttached Files: ${cols[3]}\nType: ${cols[4]}\nStatus: ${cols[5]}\n`;
+    } else {
+      content = 'Record export';
+    }
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    // show success modal
+    if (successMessage) successMessage.textContent = 'Your file has been downloaded successfully!';
+    if (successCard) successCard.classList.add('active');
+    setTimeout(() => { if (successCard) successCard.classList.remove('active'); }, 2500);
+  });
+});
+
+
+
+    </script>
+    <!-- ADD EXPENSE MODAL -->
+    <div id="addExpenseModalOverlay" class="modal-overlay" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addExpenseTitle">
+        <div class="modal-header">
+          <h3 id="addExpenseTitle">Add New Expense</h3>
+          <button class="close-modal" id="aeCloseBtn" aria-label="Close">&times;</button>
+        </div>
+
+        <div class="modal-content" style="grid-template-columns:1fr 1fr;">
+          <div>
+            <label style="display:block;margin-bottom:6px;font-weight:600;color:black;">Project / Event</label>
+            <input id="ae_project" class="es-input" type="text" style="width:100%;padding:0.6rem;border-radius:8px;" />
+            <div class="es-err" id="ae_project_err" style="display:none;margin-top:6px;"></div>
+          </div>
+
+          <div>
+            <label style="display:block;margin-bottom:6px;font-weight:600;color:black;">Date</label>
+            <input id="ae_date" class="es-input" type="date" style="width:100%;padding:0.6rem;border-radius:8px;" />
+          </div>
+
+          <div>
+            <label style="display:block;margin-bottom:6px;font-weight:600;color:black;">Expense Name</label>
+            <input id="ae_name" class="es-input" type="text" style="width:100%;padding:0.6rem;border-radius:8px;" />
+            <div class="es-err" id="ae_name_err" style="display:none;margin-top:6px;"></div>
+          </div>
+
+          <div>
+            <label style="display:block;margin-bottom:6px;font-weight:600;color:black;">Category</label>
+            <input id="ae_category" class="es-input" type="text" style="width:100%;padding:0.6rem;border-radius:8px;" />
+          </div>
+
+          <div>
+            <label style="display:block;margin-bottom:6px;font-weight:600;color:black;">Amount</label>
+            <input id="ae_amount" class="es-input" type="number" min="0" step="0.01" style="width:100%;padding:0.6rem;border-radius:8px;" />
+            <div class="es-err" id="ae_amount_err" style="display:none;margin-top:6px;"></div>
+          </div>
+          <!-- Remarks (restored to original grid position) -->
+          <div>
+            <label style="display:block;margin-bottom:6px;font-weight:600;color:black;">Remarks</label>
+            <input id="ae_remarks" class="es-input" type="text" style="width:100%;padding:0.6rem;border-radius:8px;" />
+          </div>
+        </div>
+        <!-- Bottom action bar: full-width Add Expense button similar to Send Reminder -->
+        <div style="padding:0.5rem 1.8rem; margin-bottom: 20px;">
+          <button id="aeSubmit" class="es-save-wide">Add Expense</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    (function(){
+      const addBtn = document.getElementById('addExpenseBtn');
+      const overlay = document.getElementById('addExpenseModalOverlay');
+      const aeClose = document.getElementById('aeCloseBtn');
+      const aeSubmit = document.getElementById('aeSubmit');
+      const tbody = document.querySelector('.ts-table tbody');
+
+      const aeProjectErr = document.getElementById('ae_project_err');
+      const aeNameErr = document.getElementById('ae_name_err');
+      const aeAmountErr = document.getElementById('ae_amount_err');
+
+      function open() { if(overlay){ overlay.style.display = 'flex'; document.body.style.overflow = 'hidden'; overlay.setAttribute('aria-hidden','false'); clearAeForm(); clearErrors(); }}
+      function close() { if(overlay){ overlay.style.display = 'none'; document.body.style.overflow = 'auto'; overlay.setAttribute('aria-hidden','true'); clearAeForm(); clearErrors(); }}
+
+      addBtn?.addEventListener('click', open);
+      aeClose?.addEventListener('click', close);
+
+      overlay?.addEventListener('click', (e)=>{ if(e.target === overlay) close(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') close(); });
+
+      function clearAeForm(){ ['ae_project','ae_date','ae_name','ae_category','ae_amount','ae_remarks'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.value = ''; el.classList.remove('has-input'); } }); if(overlay) overlay.classList.remove('ready'); }
+      function clearErrors(){ [aeProjectErr, aeNameErr, aeAmountErr].forEach(el=>{ if(el){ el.style.display = 'none'; el.textContent = ''; } }); }
+
+      function formatCurrency(v){
+        try { const n = Number(v); if(isNaN(n)) return 'P0'; return 'P' + n.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2}).replace('.00',''); } catch(e){ return 'P' + v; }
+      }
+
+      function saveToLocal(data){
+        try{
+          const list = JSON.parse(localStorage.getItem('treasurerExpenses') || '[]');
+          list.push(data);
+          localStorage.setItem('treasurerExpenses', JSON.stringify(list));
+        }catch(e){ console.error('Failed saving expense', e); }
+      }
+
+      function addRow(data){
+        if(!tbody) return;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${escapeHtml(data.project)}</td>` +
+                       `<td>${escapeHtml(data.date)}</td>` +
+                       `<td>${escapeHtml(data.name)}</td>` +
+                       `<td>${escapeHtml(data.category)}</td>` +
+                       `<td>${formatCurrency(data.amount)}</td>` +
+                       `<td>Pending</td>` +
+                       `<td>${escapeHtml(data.remarks || '-')}</td>` +
+                       `<td class="action-cell"><button class="ts-view">View</button><button class="ts-edit">Edit</button></td>`;
+        tbody.appendChild(tr);
+      }
+
+      function escapeHtml(str){ if(str==null) return ''; return String(str).replace(/[&<>"']/g, function(ch){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[ch]; }); }
+
+      aeSubmit?.addEventListener('click', function(e){
+        e.preventDefault();
+        clearErrors();
+        const project = document.getElementById('ae_project').value.trim();
+        const dateRaw = document.getElementById('ae_date').value;
+        const name = document.getElementById('ae_name').value.trim();
+        const category = document.getElementById('ae_category').value.trim();
+        const amountRaw = document.getElementById('ae_amount').value;
+        const amount = (typeof amountRaw === 'string') ? amountRaw.trim() : amountRaw;
+        const remarks = document.getElementById('ae_remarks').value.trim();
+
+        let ok = true;
+        if (!name) { if(aeNameErr){ aeNameErr.textContent = 'This field is required'; aeNameErr.style.display = 'block'; } ok = false; }
+        if (amount === '' || isNaN(Number(amount))) { if(aeAmountErr){ aeAmountErr.textContent = 'This field is required'; aeAmountErr.style.display = 'block'; } ok = false; }
+
+        if (!ok) return;
+
+        const date = dateRaw ? (new Date(dateRaw)).toLocaleDateString() : (new Date()).toLocaleDateString();
+        const data = { project: project || '-', date, name, category: category || '-', amount: Number(amount), remarks };
+
+        addRow(data);
+        saveToLocal(data);
+
+        const successCard = document.getElementById('successCard');
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) successMessage.textContent = 'Your expense has been added successfully!';
+        if (successCard) { successCard.classList.add('active'); setTimeout(()=>{ successCard.classList.remove('active'); }, 2200); }
+
+        close();
+      });
+
+      // Load saved expenses on start
+      (function loadSaved(){ try{ const list = JSON.parse(localStorage.getItem('treasurerExpenses') || '[]'); if(Array.isArray(list)) list.forEach(addRow); }catch(e){ /* ignore */ } })();
+
+      // Input state handling for Add Expense modal: toggle filled styles and button ready state
+      (function setupAeInputState(){
+        const aeOverlay = document.getElementById('addExpenseModalOverlay');
+        if(!aeOverlay) return;
+        const inputs = Array.from(aeOverlay.querySelectorAll('input.es-input'));
+        function updateAeState(){
+          const any = inputs.some(i=>{ try{ return String(i.value || '').trim() !== ''; }catch(e){ return false; } });
+          inputs.forEach(i=>{ if(String(i.value || '').trim() !== '') i.classList.add('has-input'); else i.classList.remove('has-input'); });
+          aeOverlay.classList.toggle('ready', any);
+        }
+        inputs.forEach(i=>{ i.addEventListener('input', updateAeState); i.addEventListener('change', updateAeState); });
+        // initialize state
+        updateAeState();
+      })();
+
+    })();
+    </script>
+
+    <!-- DOWNLOAD STARTING OVERLAY -->
+    <div id="downloadOverlay" class="download-overlay">
+      <div class="download-card">
+        <div class="download-spinner" aria-hidden="true"></div>
+        <p id="downloadMessage" style="font-weight:600;color:#2b6758;margin:0;">Preparing download...</p>
+      </div>
+    </div>
+
+    <!-- SUCCESS (copied login-page design) -->
+    <div class="success-modal" id="successCard">
+      <div class="card">
+        <div class="success-icon">&#10003;</div>
+        <p class="success-text" id="successMessage">Your account has been logged out successfully!</p>
+      </div>
+    </div>
+  </body>
+</html>
